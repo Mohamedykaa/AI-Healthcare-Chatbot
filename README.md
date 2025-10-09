@@ -102,3 +102,21 @@ streamlit run src/app.py
 To run both the Streamlit UI and the FastAPI backend for API Mode:
 
 run_all.bat
+)
+
+🧠 Model Details
+Algorithm: Random Forest Classifier
+
+Feature Extraction: TF-IDF Vectorization
+
+Accuracy: ~95% on the test set
+
+Training Data: Derived from DiseaseSymptomDescription.csv
+
+⚠️ Disclaimer
+This chatbot is not a substitute for professional medical advice. It provides general health information based on user input and should not be used for diagnosis or treatment decisions.
+
+👨‍💻 Author
+Mohamed Yaser
+
+GitHub Profile
