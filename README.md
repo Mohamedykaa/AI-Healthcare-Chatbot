@@ -62,7 +62,6 @@ AI-Healthcare-Chatbot/
 ├── english_knowledge_base.json # English version of the knowledge base
 └── README.md
 
-
 ---
 
 ## ⚙️ Installation & Setup
