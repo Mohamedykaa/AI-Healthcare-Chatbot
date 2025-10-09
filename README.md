@@ -34,3 +34,78 @@ The system predicts possible diseases, suggests tests, and provides general advi
 
 ## 📁 Project Structure
 
+
+
+AI-Healthcare-Chatbot/
+│
+├── chatbot_system/ # Core chatbot agents and knowledge base
+│ ├── diagnosis_agent.py
+│ ├── symptom_agent.py
+│ ├── recommendation_agent.py
+│ └── knowledge_base.json
+│
+├── data/ # Dataset for training
+│ └── DiseaseSymptomDescription.csv
+│
+├── models/ # Trained ML pipeline and label encoder
+│ ├── optimized_nlp_pipeline.joblib
+│ └── nlp_label_encoder.joblib
+│
+├── src/ # Main Streamlit and API application
+│ ├── app.py # Streamlit UI
+│ ├── main.py # FastAPI backend
+│ ├── train_model.py # Model training script
+│ └── utils/ # Helper modules
+│
+├── requirements.txt # Python dependencies
+├── run_all.bat # Windows batch file to run app + API
+├── english_knowledge_base.json # English version of the knowledge base
+└── README.md
+
+
+---
+
+## ⚙️ Installation & Setup
+
+### Clone the repository:
+```bash
+git clone https://github.com/Mohamedykaa/AI-Healthcare-Chatbot.git
+cd AI-Healthcare-Chatbot
+
+Create and activate a virtual environment:
+python -m venv venv
+venv\Scripts\activate   # On Windows
+
+Install all dependencies:
+pip install -r requirements.txt
+
+Run the application:
+
+To run only the Streamlit UI (Local Mode):
+
+streamlit run src/app.py
+
+
+To run both the Streamlit UI and the FastAPI backend (API Mode):
+
+run_all.bat
+
+🧠 Model Details
+
+Algorithm: Random Forest Classifier
+
+Feature Extraction: TF-IDF Vectorization
+
+Accuracy: ~95% on the test set
+
+Training Data: Derived from DiseaseSymptomDescription.csv
+
+⚠️ Disclaimer
+
+This chatbot is not a substitute for professional medical advice.
+It provides general health information based on user input and should not be used for diagnosis or treatment decisions.
+
+👨‍💻 Author
+
+Mohamed Yaser
+GitHub Profile
