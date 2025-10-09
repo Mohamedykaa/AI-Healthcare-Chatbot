@@ -1,14 +1,10 @@
-# train_model.py (Final Polished Version)
-
-# --- Import Libraries ---
 import pandas as pd
 import joblib
 import re
-import seaborn as sns
-import matplotlib.pyplot as plt
+import os
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, confusion_matrix, top_k_accuracy_score
+from sklearn.metrics import classification_report
 from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline
@@ -16,16 +12,16 @@ from sklearn.base import BaseEstimator, TransformerMixin
 
 # --- 1. Custom Transformer for Text Cleaning ---
 class TextCleaner(BaseEstimator, TransformerMixin):
-    """Custom transformer to clean text by removing punctuation and converting to lowercase."""
     def fit(self, X, y=None):
         return self
     
     def transform(self, X, y=None):
-        return X.apply(lambda text: re.sub(r"[^a-z\s]", "", str(text).lower()))
+        return [re.sub(r'[^a-zA-Z\s]', '', str(text)).lower().strip() for text in X]
 
 # --- 2. Load Data ---
 print("\nLoading the text-based dataset...")
-df = pd.read_csv("../data/DiseaseSymptomDescription.csv")
+data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'DiseaseSymptomDescription.csv')
+df = pd.read_csv(data_path)
 df.dropna(inplace=True)
 df.reset_index(drop=True, inplace=True)
 
@@ -40,17 +36,18 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # --- 4. Create the Full Machine Learning Pipeline ---
+# Using 'rf' for RandomForestClassifier to be descriptive
 pipeline = Pipeline([
     ('cleaner', TextCleaner()),
     ('tfidf', TfidfVectorizer(stop_words='english')),
-    ('clf', RandomForestClassifier(random_state=42))
+    ('rf', RandomForestClassifier(random_state=42)) 
 ])
 
 # --- 5. Define Parameter Grid ---
 param_grid = {
     'tfidf__max_features': [1500, 2000],
     'tfidf__ngram_range': [(1, 1), (1, 2)],
-    'clf__n_estimators': [100, 200],
+    'rf__n_estimators': [100, 200],
 }
 
 # --- 6. Train with GridSearchCV ---
@@ -64,26 +61,14 @@ best_model = grid_search.best_estimator_
 y_pred = best_model.predict(X_test)
 
 print("\n--- Final Model Evaluation on Test Set ---")
-print("Classification Report:")
 print(classification_report(y_test, y_pred, target_names=le.classes_))
-
-# NEW: Top-3 Accuracy
-y_pred_proba = best_model.predict_proba(X_test)
-top3_accuracy = top_k_accuracy_score(y_test, y_pred_proba, k=3)
-print(f"Top-3 Accuracy: {top3_accuracy:.4f}")
-
-# NEW: Confusion Matrix
-print("\nGenerating Confusion Matrix...")
-cm = confusion_matrix(y_test, y_pred)
-plt.figure(figsize=(15, 12))
-sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=le.classes_, yticklabels=le.classes_)
-plt.title('Confusion Matrix')
-plt.xlabel('Predicted Label')
-plt.ylabel('True Label')
-plt.show()
 
 # --- 8. Save the Final Pipeline ---
 print("\nSaving the final pipeline...")
-joblib.dump(best_model, "../optimized_nlp_pipeline.joblib")
-joblib.dump(le, "../nlp_label_encoder.joblib")
-print("Final pipeline and encoder saved successfully!")
+models_dir = os.path.join(os.path.dirname(__file__), '..', 'models')
+os.makedirs(models_dir, exist_ok=True) 
+
+joblib.dump(best_model, os.path.join(models_dir, "optimized_nlp_pipeline.joblib"))
+joblib.dump(le, os.path.join(models_dir, "nlp_label_encoder.joblib"))
+print("✅ Final pipeline and encoder saved successfully!")
+

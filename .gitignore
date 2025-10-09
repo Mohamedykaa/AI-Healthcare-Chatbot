@@ -1,0 +1,18 @@
+# 🧠 Ignore virtual environment
+venv/
+
+# 🧩 Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 🧰 Logs & temporary files
+*.log
+.DS_Store
+.env
+
+# 🚫 Files you don’t want on GitHub
+short_structure.txt
+uvicorn
+file.py
