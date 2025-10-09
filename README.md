@@ -79,49 +79,26 @@ AI-Healthcare-Chatbot/
 ├── english_knowledge_base.json   # English version of the knowledge base
 └── README.md
 
-
 ⚙️ Installation & Setup
 Clone the repository:
 
 git clone [https://github.com/Mohamedykaa/AI-Healthcare-Chatbot.git](https://github.com/Mohamedykaa/AI-Healthcare-Chatbot.git)
 cd AI-Healthcare-Chatbot
 
-
 Create and activate a virtual environment:
 
 python -m venv venv
 venv\Scripts\activate   # On Windows
 
-
 Install all dependencies:
 
 pip install -r requirements.txt
-
 
 Run the application:
 To run only the Streamlit UI in Local Mode:
 
 streamlit run src/app.py
 
-
 To run both the Streamlit UI and the FastAPI backend for API Mode:
 
 run_all.bat
-
-
-🧠 Model Details
-Algorithm: Random Forest Classifier
-
-Feature Extraction: TF-IDF Vectorization
-
-Accuracy: ~95% on the test set
-
-Training Data: Derived from DiseaseSymptomDescription.csv
-
-⚠️ Disclaimer
-This chatbot is not a substitute for professional medical advice. It provides general health information based on user input and should not be used for diagnosis or treatment decisions.
-
-👨‍💻 Author
-Mohamed Yaser
-
-GitHub Profile
