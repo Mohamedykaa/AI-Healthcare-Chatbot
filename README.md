@@ -34,7 +34,7 @@ The system predicts possible diseases, suggests tests, and provides general advi
 
 ## 📁 Project Structure
 
-
+```
 
 AI-Healthcare-Chatbot/
 │
@@ -62,6 +62,7 @@ AI-Healthcare-Chatbot/
 ├── english_knowledge_base.json # English version of the knowledge base
 └── README.md
 
+```
 ---
 
 ## ⚙️ Installation & Setup
