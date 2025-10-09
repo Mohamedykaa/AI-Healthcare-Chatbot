@@ -1,18 +1,50 @@
-# 🧠 Ignore virtual environment
-venv/
-
-# 🧩 Python cache files
+# 🧠 Python cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# 🧰 Logs & temporary files
-*.log
-.DS_Store
-.env
+# 📦 Virtual environments
+venv/
+env/
+.venv/
 
-# 🚫 Files you don’t want on GitHub
-short_structure.txt
-uvicorn
-file.py
+# 🧪 Model files (large binaries)
+*.joblib
+*.pkl
+*.h5
+
+# 🧰 Build and packaging
+build/
+dist/
+*.egg-info/
+
+# 🧾 Logs and reports
+*.log
+*.csv
+*.json
+*.xlsx
+
+# ⚙️ IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# 🧑‍💻 System files
+.DS_Store
+Thumbs.db
+
+# 🔐 Credentials or local configs
+*.env
+config.json
+
+# 🧠 Backup and temporary files
+*.bak
+*.tmp
+
+# ⚗️ Streamlit cache
+.streamlit/
+
+# 🔍 Uvicorn or FastAPI cache
+uvicorn/
