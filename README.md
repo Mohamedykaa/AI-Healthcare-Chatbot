@@ -69,8 +69,10 @@ Prevents data leakage by splitting data before GridSearchCV.
 Automatically saves model, encoder, and a JSON training report.
 
 Supports --fast mode for quick retraining.
----
+
 🗂️ Project Structure
+---
+
 AI-Healthcare-Chatbot/
 │
 ├── data/                     # Medical datasets and merged training data
@@ -119,6 +121,7 @@ AI-Healthcare-Chatbot/
 ├── requirements.txt
 ├── README.md
 └── pytest.ini
+
 ---
 ⚙️ Installation
 1. Clone the repository
