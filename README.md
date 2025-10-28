@@ -69,7 +69,7 @@ Prevents data leakage by splitting data before GridSearchCV.
 Automatically saves model, encoder, and a JSON training report.
 
 Supports --fast mode for quick retraining.
-
+---
 🗂️ Project Structure
 AI-Healthcare-Chatbot/
 │
@@ -119,7 +119,7 @@ AI-Healthcare-Chatbot/
 ├── requirements.txt
 ├── README.md
 └── pytest.ini
-
+---
 ⚙️ Installation
 1. Clone the repository
 git clone https://github.com/Mohamedykaa/AI-Healthcare-Chatbot.git
