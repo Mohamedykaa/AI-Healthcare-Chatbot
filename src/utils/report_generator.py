@@ -1,91 +1,130 @@
+import json
 import os
-from reportlab.lib.pagesizes import A4
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image as PlatypusImage
-from reportlab.graphics.shapes import Drawing
-from reportlab.graphics.barcode import qr
-from datetime import datetime
-from io import BytesIO
-import qrcode
+from collections import Counter
+from statistics import mean, StatisticsError
 
-def generate_medical_report(user_name, user_input, predictions, recommendations):
-    """
-    Generates a personalized, professional PDF medical report.
-    """
-    # --- Prepare directory and file name ---
-    reports_dir = "reports"
-    os.makedirs(reports_dir, exist_ok=True)
-    file_name = f"{user_name.replace(' ', '_')}_medical_report_{datetime.now().strftime('%Y%m%d')}.pdf"
-    file_path = os.path.join(reports_dir, file_name)
+class HistoryAnalyzer:
+    """Analyzes chatbot conversation history and extracts useful insights."""
 
-    # --- Create PDF document ---
-    doc = SimpleDocTemplate(file_path, pagesize=A4)
-    story = []
+    def __init__(self, history_path="history.json"):
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))
+        self.history_path = os.path.join(project_root, history_path)
+        self.history = []
+        self.load_history()
 
-    # --- Styles ---
-    styles = getSampleStyleSheet()
-    title_style = ParagraphStyle("TitleStyle", parent=styles["Title"], alignment=1, textColor=colors.HexColor("#007ACC"), fontSize=20)
-    header_style = ParagraphStyle("HeaderStyle", parent=styles["Heading2"], textColor=colors.darkblue, spaceAfter=6)
-    normal_style = ParagraphStyle("NormalStyle", parent=styles["Normal"], fontSize=12, leading=16)
-    disclaimer_style = ParagraphStyle("DisclaimerStyle", parent=styles["Italic"], fontSize=10, textColor=colors.darkred, leading=14)
+    def load_history(self):
+        """Loads JSON history from file."""
+        if not os.path.exists(self.history_path):
+            print(f"⚠️ No history file found at '{self.history_path}'. Ensure the file exists.")
+            return
+        try:
+            with open(self.history_path, "r", encoding="utf-8") as f:
+                self.history = json.load(f)
+                print(f"✅ History loaded successfully from '{self.history_path}' ({len(self.history)} sessions).")
+        except json.JSONDecodeError:
+            print(f"❌ Error: Invalid JSON format in history file '{self.history_path}'.")
+            self.history = []
+        except Exception as e:
+            print(f"❌ Error loading history file: {e}")
+            self.history = []
 
-    # --- Header ---
-    story.append(Paragraph("🩺 AI Healthcare System - Diagnostic Report", title_style))
-    story.append(Spacer(1, 12))
-    story.append(Paragraph(f"<b>Date:</b> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", normal_style))
-    story.append(Paragraph(f"<b>Patient Name:</b> {user_name}", normal_style))
-    story.append(Spacer(1, 20))
-    story.append(Paragraph("<b>Reported Symptoms:</b>", header_style))
-    story.append(Paragraph(user_input, normal_style))
-    story.append(Spacer(1, 20))
+    def analyze(self):
+        """Generate full report based on history data."""
+        if not self.history:
+            print("⚠️ No data available to analyze.")
+            return None
 
-    # --- Predictions Table ---
-    if predictions:
-        story.append(Paragraph("<b>Preliminary Diagnosis:</b>", header_style))
-        table_data = [["Condition", "Likelihood", "Recommended Tests", "Advice", "Specialist"]]
-        for i, pred in enumerate(predictions):
-            rec = recommendations[i]
-            table_data.append([
-                pred["disease"],
-                f"{pred['probability']:.1%}",
-                Paragraph(", ".join(rec.get("tests", [])), normal_style),
-                Paragraph(rec.get("advice", "N/A"), normal_style),
-                rec.get("specialist", "N/A")
-            ])
+        total_sessions = len(self.history)
+        all_diseases = []
+        answer_counts_per_session = []
+        yes_count = 0
+        no_count = 0
 
-        table = Table(table_data, colWidths=[90, 70, 110, 130, 90])
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#007ACC")),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, -1), 9),
-            ('BOX', (0, 0), (-1, -1), 1, colors.black),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black)
-        ]))
-        story.append(table)
-    else:
-        story.append(Paragraph("No conditions detected based on the provided symptoms.", normal_style))
+        for session in self.history:
+            for pred in session.get("predictions", []):
+                disease_name = pred.get("disease")
+                if disease_name:
+                    all_diseases.append(disease_name)
 
-    story.append(Spacer(1, 30))
+            answers = session.get("answers", {})
+            answer_counts_per_session.append(len(answers))
 
-    # --- Disclaimer ---
-    disclaimer = "<b>Disclaimer:</b> This report is generated by an AI system and is for informational purposes only. It is not a substitute for professional medical diagnosis. Always consult a qualified healthcare provider."
-    story.append(Paragraph(disclaimer, disclaimer_style))
-    story.append(Spacer(1, 20))
+            for qid, answer_data in answers.items():
+                if isinstance(answer_data, dict):
+                    answer_text = answer_data.get("answer_text", "").lower()
+                    if answer_text == "yes":
+                        yes_count += 1
+                    elif answer_text == "no":
+                        no_count += 1
+                else: # Fallback for old format
+                    answer_text_old = str(answer_data).lower()
+                    if answer_text_old == "yes":
+                        yes_count += 1
+                    elif answer_text_old == "no":
+                        no_count += 1
 
-    # --- QR Code ---
-    project_url = "https://your-app-name.onrender.com"
-    qr_code_img = qrcode.make(project_url)
-    qr_buffer = BytesIO()
-    qr_code_img.save(qr_buffer, format="PNG")
-    qr_buffer.seek(0)
-    
-    story.append(Paragraph("<b>Access Online Chatbot:</b>", normal_style))
-    story.append(PlatypusImage(qr_buffer, width=80, height=80))
+        # Calculate statistics
+        most_common = Counter(all_diseases).most_common(5) if all_diseases else []
+        try:
+             avg_answers = mean(answer_counts_per_session) if answer_counts_per_session else 0
+        except StatisticsError: # Handle case if list is empty or contains non-numeric
+             avg_answers = 0
 
-    # --- Build PDF ---
-    doc.build(story)
-    return file_path
+        # ✅ --- START: Added Yes/No Ratio Calculation ---
+        total_yes_no = yes_count + no_count
+        yes_ratio = (yes_count / total_yes_no * 100) if total_yes_no > 0 else 0
+        # ✅ --- END: Added Yes/No Ratio Calculation ---
+
+        summary_data = {
+            "total_sessions": total_sessions,
+            "avg_answers_per_session": round(avg_answers, 2),
+            "total_yes_answers": yes_count,
+            "total_no_answers": no_count,
+            "yes_answer_ratio_percent": round(yes_ratio, 1), # ✅ Added ratio to summary
+            "top_diseases": [{"disease": d, "count": c} for d, c in most_common]
+        }
+
+        # Print summary report
+        print("\n📊 === Chatbot History Analysis Report ===")
+        print(f"🗓️ Total chat sessions analyzed: {summary_data['total_sessions']}")
+        print(f"💬 Average questions answered per session: {summary_data['avg_answers_per_session']:.2f}")
+        print(f"👍 Total 'yes' answers recorded: {summary_data['total_yes_answers']}")
+        print(f"👎 Total 'no' answers recorded: {summary_data['total_no_answers']}")
+        # ✅ Added ratio printout
+        if total_yes_no > 0:
+             print(f"📈 Positive response ratio ('Yes' answers): {summary_data['yes_answer_ratio_percent']:.1f}%")
+
+        if summary_data['top_diseases']:
+            print("\n🏥 Top 5 most predicted diseases:")
+            for i, item in enumerate(summary_data['top_diseases'], 1):
+                print(f"   {i}. {item['disease']}: {item['count']} times")
+        else:
+             print("\n🏥 No disease predictions found in history.")
+
+        print("\n✅ Report generated successfully!\n")
+
+        return summary_data
+
+    def export_summary(self, output_path="data/analysis_summary.json"):
+        """Save the summary calculated by analyze() in a new JSON file."""
+        summary = self.analyze()
+        if summary is None:
+            print("⚠️ No data to export (history empty or analysis failed).")
+            return
+
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))
+        absolute_output_path = os.path.join(project_root, output_path)
+
+        try:
+            os.makedirs(os.path.dirname(absolute_output_path), exist_ok=True)
+            with open(absolute_output_path, "w", encoding="utf-8") as f:
+                json.dump(summary, f, indent=4, ensure_ascii=False)
+            print(f"💾 Summary exported successfully to {absolute_output_path}")
+        except Exception as e:
+            print(f"❌ Error exporting summary to {absolute_output_path}: {e}")
+
+if __name__ == "__main__":
+    analyzer = HistoryAnalyzer(history_path="history.json")
+    analyzer.export_summary()

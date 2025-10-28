@@ -1,0 +1,4348 @@
+{
+    "rules": [
+        {
+            "symptoms": [
+                "dischromic  patches",
+                "itching",
+                "nodal skin eruptions",
+                "skin rash"
+            ],
+            "conditions": [
+                {
+                    "name": "fungal infection",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_fungal_infection_dischromic_patches",
+                    "question": "Have you been suffering from dischromic patches lately?",
+                    "boosts": [
+                        {
+                            "name": "fungal infection",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 1
+                },
+                {
+                    "id": "q_fungal_infection_itching",
+                    "question": "Have you been suffering from itching lately?",
+                    "boosts": [
+                        {
+                            "name": "fungal infection",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 1
+                },
+                {
+                    "id": "q_fungal_infection_nodal_skin_eruptions",
+                    "question": "Have you been suffering from nodal skin eruptions lately?",
+                    "boosts": [
+                        {
+                            "name": "fungal infection",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_fungal_infection_skin_rash",
+                    "question": "Have you been suffering from skin rash lately?",
+                    "boosts": [
+                        {
+                            "name": "fungal infection",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "chills",
+                "continuous sneezing",
+                "shivering",
+                "watering from eyes"
+            ],
+            "conditions": [
+                {
+                    "name": "allergy",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_allergy_chills",
+                    "question": "Have you been suffering from chills lately?",
+                    "boosts": [
+                        {
+                            "name": "allergy",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_allergy_continuous_sneezing",
+                    "question": "Have you been suffering from continuous sneezing lately?",
+                    "boosts": [
+                        {
+                            "name": "allergy",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_allergy_shivering",
+                    "question": "Have you been suffering from shivering lately?",
+                    "boosts": [
+                        {
+                            "name": "allergy",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_allergy_watering_from_eyes",
+                    "question": "Have you been suffering from watering from eyes lately?",
+                    "boosts": [
+                        {
+                            "name": "allergy",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "acidity",
+                "chest pain",
+                "cough",
+                "stomach pain",
+                "ulcers on tongue",
+                "vomiting"
+            ],
+            "conditions": [
+                {
+                    "name": "gerd",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_gerd_acidity",
+                    "question": "Have you been suffering from acidity lately?",
+                    "boosts": [
+                        {
+                            "name": "gerd",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_gerd_chest_pain",
+                    "question": "Have you been suffering from chest pain lately?",
+                    "boosts": [
+                        {
+                            "name": "gerd",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_gerd_cough",
+                    "question": "Have you been suffering from cough lately?",
+                    "boosts": [
+                        {
+                            "name": "gerd",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_gerd_stomach_pain",
+                    "question": "Have you been suffering from stomach pain lately?",
+                    "boosts": [
+                        {
+                            "name": "gerd",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_gerd_ulcers_on_tongue",
+                    "question": "Have you been suffering from ulcers on tongue lately?",
+                    "boosts": [
+                        {
+                            "name": "gerd",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_gerd_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "gerd",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "abdominal pain",
+                "itching",
+                "loss of appetite",
+                "nausea",
+                "vomiting",
+                "yellowing of eyes",
+                "yellowish skin"
+            ],
+            "conditions": [
+                {
+                    "name": "chronic cholestasis",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_chronic_cholestasis_abdominal_pain",
+                    "question": "Have you been suffering from abdominal pain lately?",
+                    "boosts": [
+                        {
+                            "name": "chronic cholestasis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_chronic_cholestasis_itching",
+                    "question": "Have you been suffering from itching lately?",
+                    "boosts": [
+                        {
+                            "name": "chronic cholestasis",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 1
+                },
+                {
+                    "id": "q_chronic_cholestasis_loss_of_appetite",
+                    "question": "Have you been suffering from loss of appetite lately?",
+                    "boosts": [
+                        {
+                            "name": "chronic cholestasis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_chronic_cholestasis_nausea",
+                    "question": "Have you been suffering from nausea lately?",
+                    "boosts": [
+                        {
+                            "name": "chronic cholestasis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_chronic_cholestasis_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "chronic cholestasis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_chronic_cholestasis_yellowing_of_eyes",
+                    "question": "Have you been suffering from yellowing of eyes lately?",
+                    "boosts": [
+                        {
+                            "name": "chronic cholestasis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_chronic_cholestasis_yellowish_skin",
+                    "question": "Have you been suffering from yellowish skin lately?",
+                    "boosts": [
+                        {
+                            "name": "chronic cholestasis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "burning micturition",
+                "itching",
+                "skin rash",
+                "spotting  urination",
+                "stomach pain"
+            ],
+            "conditions": [
+                {
+                    "name": "drug reaction",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_drug_reaction_burning_micturition",
+                    "question": "Have you been suffering from burning micturition lately?",
+                    "boosts": [
+                        {
+                            "name": "drug reaction",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_drug_reaction_itching",
+                    "question": "Have you been suffering from itching lately?",
+                    "boosts": [
+                        {
+                            "name": "drug reaction",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 1
+                },
+                {
+                    "id": "q_drug_reaction_skin_rash",
+                    "question": "Have you been suffering from skin rash lately?",
+                    "boosts": [
+                        {
+                            "name": "drug reaction",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_drug_reaction_spotting_urination",
+                    "question": "Have you been suffering from spotting urination lately?",
+                    "boosts": [
+                        {
+                            "name": "drug reaction",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 1
+                },
+                {
+                    "id": "q_drug_reaction_stomach_pain",
+                    "question": "Have you been suffering from stomach pain lately?",
+                    "boosts": [
+                        {
+                            "name": "drug reaction",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "abdominal pain",
+                "indigestion",
+                "internal itching",
+                "loss of appetite",
+                "passage of gases",
+                "vomiting"
+            ],
+            "conditions": [
+                {
+                    "name": "peptic ulcer diseae",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_peptic_ulcer_diseae_abdominal_pain",
+                    "question": "Have you been suffering from abdominal pain lately?",
+                    "boosts": [
+                        {
+                            "name": "peptic ulcer diseae",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_peptic_ulcer_diseae_indigestion",
+                    "question": "Have you been suffering from indigestion lately?",
+                    "boosts": [
+                        {
+                            "name": "peptic ulcer diseae",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_peptic_ulcer_diseae_internal_itching",
+                    "question": "Have you been suffering from internal itching lately?",
+                    "boosts": [
+                        {
+                            "name": "peptic ulcer diseae",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_peptic_ulcer_diseae_loss_of_appetite",
+                    "question": "Have you been suffering from loss of appetite lately?",
+                    "boosts": [
+                        {
+                            "name": "peptic ulcer diseae",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_peptic_ulcer_diseae_passage_of_gases",
+                    "question": "Have you been suffering from passage of gases lately?",
+                    "boosts": [
+                        {
+                            "name": "peptic ulcer diseae",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_peptic_ulcer_diseae_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "peptic ulcer diseae",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "extra marital contacts",
+                "high fever",
+                "muscle wasting",
+                "patches in throat"
+            ],
+            "conditions": [
+                {
+                    "name": "aids",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_aids_extra_marital_contacts",
+                    "question": "Have you been suffering from extra marital contacts lately?",
+                    "boosts": [
+                        {
+                            "name": "aids",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_aids_high_fever",
+                    "question": "Have you been suffering from high fever lately?",
+                    "boosts": [
+                        {
+                            "name": "aids",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_aids_muscle_wasting",
+                    "question": "Have you been suffering from muscle wasting lately?",
+                    "boosts": [
+                        {
+                            "name": "aids",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_aids_patches_in_throat",
+                    "question": "Have you been suffering from patches in throat lately?",
+                    "boosts": [
+                        {
+                            "name": "aids",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "blurred and distorted vision",
+                "excessive hunger",
+                "fatigue",
+                "increased appetite",
+                "irregular sugar level",
+                "lethargy",
+                "obesity",
+                "polyuria",
+                "restlessness",
+                "weight loss"
+            ],
+            "conditions": [
+                {
+                    "name": "diabetes",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_diabetes_blurred_and_distorted_vision",
+                    "question": "Have you been suffering from blurred and distorted vision lately?",
+                    "boosts": [
+                        {
+                            "name": "diabetes",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_diabetes_excessive_hunger",
+                    "question": "Have you been suffering from excessive hunger lately?",
+                    "boosts": [
+                        {
+                            "name": "diabetes",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_diabetes_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "diabetes",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_diabetes_increased_appetite",
+                    "question": "Have you been suffering from increased appetite lately?",
+                    "boosts": [
+                        {
+                            "name": "diabetes",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_diabetes_irregular_sugar_level",
+                    "question": "Have you been suffering from irregular sugar level lately?",
+                    "boosts": [
+                        {
+                            "name": "diabetes",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_diabetes_lethargy",
+                    "question": "Have you been suffering from lethargy lately?",
+                    "boosts": [
+                        {
+                            "name": "diabetes",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_diabetes_obesity",
+                    "question": "Have you been suffering from obesity lately?",
+                    "boosts": [
+                        {
+                            "name": "diabetes",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_diabetes_polyuria",
+                    "question": "Have you been suffering from polyuria lately?",
+                    "boosts": [
+                        {
+                            "name": "diabetes",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_diabetes_restlessness",
+                    "question": "Have you been suffering from restlessness lately?",
+                    "boosts": [
+                        {
+                            "name": "diabetes",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_diabetes_weight_loss",
+                    "question": "Have you been suffering from weight loss lately?",
+                    "boosts": [
+                        {
+                            "name": "diabetes",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "dehydration",
+                "diarrhoea",
+                "sunken eyes",
+                "vomiting"
+            ],
+            "conditions": [
+                {
+                    "name": "gastroenteritis",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_gastroenteritis_dehydration",
+                    "question": "Have you been suffering from dehydration lately?",
+                    "boosts": [
+                        {
+                            "name": "gastroenteritis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_gastroenteritis_diarrhoea",
+                    "question": "Have you been suffering from diarrhoea lately?",
+                    "boosts": [
+                        {
+                            "name": "gastroenteritis",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_gastroenteritis_sunken_eyes",
+                    "question": "Have you been suffering from sunken eyes lately?",
+                    "boosts": [
+                        {
+                            "name": "gastroenteritis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_gastroenteritis_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "gastroenteritis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "breathlessness",
+                "cough",
+                "family history",
+                "fatigue",
+                "high fever",
+                "mucoid sputum"
+            ],
+            "conditions": [
+                {
+                    "name": "bronchial asthma",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_bronchial_asthma_breathlessness",
+                    "question": "Have you been suffering from breathlessness lately?",
+                    "boosts": [
+                        {
+                            "name": "bronchial asthma",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_bronchial_asthma_cough",
+                    "question": "Have you been suffering from cough lately?",
+                    "boosts": [
+                        {
+                            "name": "bronchial asthma",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_bronchial_asthma_family_history",
+                    "question": "Have you been suffering from family history lately?",
+                    "boosts": [
+                        {
+                            "name": "bronchial asthma",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_bronchial_asthma_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "bronchial asthma",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_bronchial_asthma_high_fever",
+                    "question": "Have you been suffering from high fever lately?",
+                    "boosts": [
+                        {
+                            "name": "bronchial asthma",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_bronchial_asthma_mucoid_sputum",
+                    "question": "Have you been suffering from mucoid sputum lately?",
+                    "boosts": [
+                        {
+                            "name": "bronchial asthma",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "chest pain",
+                "dizziness",
+                "headache",
+                "lack of concentration",
+                "loss of balance"
+            ],
+            "conditions": [
+                {
+                    "name": "hypertension",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_hypertension_chest_pain",
+                    "question": "Have you been suffering from chest pain lately?",
+                    "boosts": [
+                        {
+                            "name": "hypertension",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_hypertension_dizziness",
+                    "question": "Have you been suffering from dizziness lately?",
+                    "boosts": [
+                        {
+                            "name": "hypertension",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hypertension_headache",
+                    "question": "Have you been suffering from headache lately?",
+                    "boosts": [
+                        {
+                            "name": "hypertension",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_hypertension_lack_of_concentration",
+                    "question": "Have you been suffering from lack of concentration lately?",
+                    "boosts": [
+                        {
+                            "name": "hypertension",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_hypertension_loss_of_balance",
+                    "question": "Have you been suffering from loss of balance lately?",
+                    "boosts": [
+                        {
+                            "name": "hypertension",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "acidity",
+                "blurred and distorted vision",
+                "depression",
+                "excessive hunger",
+                "headache",
+                "indigestion",
+                "irritability",
+                "stiff neck",
+                "visual disturbances"
+            ],
+            "conditions": [
+                {
+                    "name": "migraine",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_migraine_acidity",
+                    "question": "Have you been suffering from acidity lately?",
+                    "boosts": [
+                        {
+                            "name": "migraine",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_migraine_blurred_and_distorted_vision",
+                    "question": "Have you been suffering from blurred and distorted vision lately?",
+                    "boosts": [
+                        {
+                            "name": "migraine",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_migraine_depression",
+                    "question": "Have you been suffering from depression lately?",
+                    "boosts": [
+                        {
+                            "name": "migraine",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_migraine_excessive_hunger",
+                    "question": "Have you been suffering from excessive hunger lately?",
+                    "boosts": [
+                        {
+                            "name": "migraine",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_migraine_headache",
+                    "question": "Have you been suffering from headache lately?",
+                    "boosts": [
+                        {
+                            "name": "migraine",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_migraine_indigestion",
+                    "question": "Have you been suffering from indigestion lately?",
+                    "boosts": [
+                        {
+                            "name": "migraine",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_migraine_irritability",
+                    "question": "Have you been suffering from irritability lately?",
+                    "boosts": [
+                        {
+                            "name": "migraine",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_migraine_stiff_neck",
+                    "question": "Have you been suffering from stiff neck lately?",
+                    "boosts": [
+                        {
+                            "name": "migraine",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_migraine_visual_disturbances",
+                    "question": "Have you been suffering from visual disturbances lately?",
+                    "boosts": [
+                        {
+                            "name": "migraine",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "back pain",
+                "dizziness",
+                "loss of balance",
+                "neck pain",
+                "weakness in limbs"
+            ],
+            "conditions": [
+                {
+                    "name": "cervical spondylosis",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_cervical_spondylosis_back_pain",
+                    "question": "Have you been suffering from back pain lately?",
+                    "boosts": [
+                        {
+                            "name": "cervical spondylosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_cervical_spondylosis_dizziness",
+                    "question": "Have you been suffering from dizziness lately?",
+                    "boosts": [
+                        {
+                            "name": "cervical spondylosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_cervical_spondylosis_loss_of_balance",
+                    "question": "Have you been suffering from loss of balance lately?",
+                    "boosts": [
+                        {
+                            "name": "cervical spondylosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_cervical_spondylosis_neck_pain",
+                    "question": "Have you been suffering from neck pain lately?",
+                    "boosts": [
+                        {
+                            "name": "cervical spondylosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_cervical_spondylosis_weakness_in_limbs",
+                    "question": "Have you been suffering from weakness in limbs lately?",
+                    "boosts": [
+                        {
+                            "name": "cervical spondylosis",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "altered sensorium",
+                "headache",
+                "vomiting",
+                "weakness of one body side"
+            ],
+            "conditions": [
+                {
+                    "name": "paralysis (brain hemorrhage)",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_paralysis_brain_hemorrhage_altered_sensorium",
+                    "question": "Have you been suffering from altered sensorium lately?",
+                    "boosts": [
+                        {
+                            "name": "paralysis (brain hemorrhage)",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_paralysis_brain_hemorrhage_headache",
+                    "question": "Have you been suffering from headache lately?",
+                    "boosts": [
+                        {
+                            "name": "paralysis (brain hemorrhage)",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_paralysis_brain_hemorrhage_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "paralysis (brain hemorrhage)",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_paralysis_brain_hemorrhage_weakness_of_one_body_side",
+                    "question": "Have you been suffering from weakness of one body side lately?",
+                    "boosts": [
+                        {
+                            "name": "paralysis (brain hemorrhage)",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "abdominal pain",
+                "dark urine",
+                "fatigue",
+                "high fever",
+                "itching",
+                "vomiting",
+                "weight loss",
+                "yellowish skin"
+            ],
+            "conditions": [
+                {
+                    "name": "jaundice",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_jaundice_abdominal_pain",
+                    "question": "Have you been suffering from abdominal pain lately?",
+                    "boosts": [
+                        {
+                            "name": "jaundice",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_jaundice_dark_urine",
+                    "question": "Have you been suffering from dark urine lately?",
+                    "boosts": [
+                        {
+                            "name": "jaundice",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_jaundice_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "jaundice",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_jaundice_high_fever",
+                    "question": "Have you been suffering from high fever lately?",
+                    "boosts": [
+                        {
+                            "name": "jaundice",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_jaundice_itching",
+                    "question": "Have you been suffering from itching lately?",
+                    "boosts": [
+                        {
+                            "name": "jaundice",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 1
+                },
+                {
+                    "id": "q_jaundice_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "jaundice",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_jaundice_weight_loss",
+                    "question": "Have you been suffering from weight loss lately?",
+                    "boosts": [
+                        {
+                            "name": "jaundice",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_jaundice_yellowish_skin",
+                    "question": "Have you been suffering from yellowish skin lately?",
+                    "boosts": [
+                        {
+                            "name": "jaundice",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "chills",
+                "diarrhoea",
+                "headache",
+                "high fever",
+                "muscle pain",
+                "nausea",
+                "sweating",
+                "vomiting"
+            ],
+            "conditions": [
+                {
+                    "name": "malaria",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_malaria_chills",
+                    "question": "Have you been suffering from chills lately?",
+                    "boosts": [
+                        {
+                            "name": "malaria",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_malaria_diarrhoea",
+                    "question": "Have you been suffering from diarrhoea lately?",
+                    "boosts": [
+                        {
+                            "name": "malaria",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_malaria_headache",
+                    "question": "Have you been suffering from headache lately?",
+                    "boosts": [
+                        {
+                            "name": "malaria",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_malaria_high_fever",
+                    "question": "Have you been suffering from high fever lately?",
+                    "boosts": [
+                        {
+                            "name": "malaria",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_malaria_muscle_pain",
+                    "question": "Have you been suffering from muscle pain lately?",
+                    "boosts": [
+                        {
+                            "name": "malaria",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_malaria_nausea",
+                    "question": "Have you been suffering from nausea lately?",
+                    "boosts": [
+                        {
+                            "name": "malaria",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_malaria_sweating",
+                    "question": "Have you been suffering from sweating lately?",
+                    "boosts": [
+                        {
+                            "name": "malaria",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_malaria_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "malaria",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "fatigue",
+                "headache",
+                "high fever",
+                "itching",
+                "lethargy",
+                "loss of appetite",
+                "malaise",
+                "mild fever",
+                "red spots over body",
+                "skin rash",
+                "swelled lymph nodes"
+            ],
+            "conditions": [
+                {
+                    "name": "chicken pox",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_chicken_pox_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "chicken pox",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_chicken_pox_headache",
+                    "question": "Have you been suffering from headache lately?",
+                    "boosts": [
+                        {
+                            "name": "chicken pox",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_chicken_pox_high_fever",
+                    "question": "Have you been suffering from high fever lately?",
+                    "boosts": [
+                        {
+                            "name": "chicken pox",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_chicken_pox_itching",
+                    "question": "Have you been suffering from itching lately?",
+                    "boosts": [
+                        {
+                            "name": "chicken pox",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 1
+                },
+                {
+                    "id": "q_chicken_pox_lethargy",
+                    "question": "Have you been suffering from lethargy lately?",
+                    "boosts": [
+                        {
+                            "name": "chicken pox",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_chicken_pox_loss_of_appetite",
+                    "question": "Have you been suffering from loss of appetite lately?",
+                    "boosts": [
+                        {
+                            "name": "chicken pox",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_chicken_pox_malaise",
+                    "question": "Have you been suffering from malaise lately?",
+                    "boosts": [
+                        {
+                            "name": "chicken pox",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_chicken_pox_mild_fever",
+                    "question": "Have you been suffering from mild fever lately?",
+                    "boosts": [
+                        {
+                            "name": "chicken pox",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_chicken_pox_red_spots_over_body",
+                    "question": "Have you been suffering from red spots over body lately?",
+                    "boosts": [
+                        {
+                            "name": "chicken pox",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_chicken_pox_skin_rash",
+                    "question": "Have you been suffering from skin rash lately?",
+                    "boosts": [
+                        {
+                            "name": "chicken pox",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_chicken_pox_swelled_lymph_nodes",
+                    "question": "Have you been suffering from swelled lymph nodes lately?",
+                    "boosts": [
+                        {
+                            "name": "chicken pox",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "back pain",
+                "chills",
+                "fatigue",
+                "headache",
+                "high fever",
+                "joint pain",
+                "loss of appetite",
+                "malaise",
+                "muscle pain",
+                "nausea",
+                "pain behind the eyes",
+                "red spots over body",
+                "skin rash",
+                "vomiting"
+            ],
+            "conditions": [
+                {
+                    "name": "dengue",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_dengue_back_pain",
+                    "question": "Have you been suffering from back pain lately?",
+                    "boosts": [
+                        {
+                            "name": "dengue",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_dengue_chills",
+                    "question": "Have you been suffering from chills lately?",
+                    "boosts": [
+                        {
+                            "name": "dengue",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_dengue_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "dengue",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_dengue_headache",
+                    "question": "Have you been suffering from headache lately?",
+                    "boosts": [
+                        {
+                            "name": "dengue",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_dengue_high_fever",
+                    "question": "Have you been suffering from high fever lately?",
+                    "boosts": [
+                        {
+                            "name": "dengue",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_dengue_joint_pain",
+                    "question": "Have you been suffering from joint pain lately?",
+                    "boosts": [
+                        {
+                            "name": "dengue",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_dengue_loss_of_appetite",
+                    "question": "Have you been suffering from loss of appetite lately?",
+                    "boosts": [
+                        {
+                            "name": "dengue",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_dengue_malaise",
+                    "question": "Have you been suffering from malaise lately?",
+                    "boosts": [
+                        {
+                            "name": "dengue",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_dengue_muscle_pain",
+                    "question": "Have you been suffering from muscle pain lately?",
+                    "boosts": [
+                        {
+                            "name": "dengue",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_dengue_nausea",
+                    "question": "Have you been suffering from nausea lately?",
+                    "boosts": [
+                        {
+                            "name": "dengue",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_dengue_pain_behind_the_eyes",
+                    "question": "Have you been suffering from pain behind the eyes lately?",
+                    "boosts": [
+                        {
+                            "name": "dengue",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_dengue_red_spots_over_body",
+                    "question": "Have you been suffering from red spots over body lately?",
+                    "boosts": [
+                        {
+                            "name": "dengue",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_dengue_skin_rash",
+                    "question": "Have you been suffering from skin rash lately?",
+                    "boosts": [
+                        {
+                            "name": "dengue",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_dengue_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "dengue",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "abdominal pain",
+                "belly pain",
+                "chills",
+                "constipation",
+                "diarrhoea",
+                "fatigue",
+                "headache",
+                "high fever",
+                "nausea",
+                "toxic look (typhos)",
+                "vomiting"
+            ],
+            "conditions": [
+                {
+                    "name": "typhoid",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_typhoid_abdominal_pain",
+                    "question": "Have you been suffering from abdominal pain lately?",
+                    "boosts": [
+                        {
+                            "name": "typhoid",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_typhoid_belly_pain",
+                    "question": "Have you been suffering from belly pain lately?",
+                    "boosts": [
+                        {
+                            "name": "typhoid",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_typhoid_chills",
+                    "question": "Have you been suffering from chills lately?",
+                    "boosts": [
+                        {
+                            "name": "typhoid",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_typhoid_constipation",
+                    "question": "Have you been suffering from constipation lately?",
+                    "boosts": [
+                        {
+                            "name": "typhoid",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_typhoid_diarrhoea",
+                    "question": "Have you been suffering from diarrhoea lately?",
+                    "boosts": [
+                        {
+                            "name": "typhoid",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_typhoid_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "typhoid",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_typhoid_headache",
+                    "question": "Have you been suffering from headache lately?",
+                    "boosts": [
+                        {
+                            "name": "typhoid",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_typhoid_high_fever",
+                    "question": "Have you been suffering from high fever lately?",
+                    "boosts": [
+                        {
+                            "name": "typhoid",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_typhoid_nausea",
+                    "question": "Have you been suffering from nausea lately?",
+                    "boosts": [
+                        {
+                            "name": "typhoid",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_typhoid_toxic_look_typhos",
+                    "question": "Have you been suffering from toxic look (typhos) lately?",
+                    "boosts": [
+                        {
+                            "name": "typhoid",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_typhoid_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "typhoid",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "abdominal pain",
+                "dark urine",
+                "diarrhoea",
+                "joint pain",
+                "loss of appetite",
+                "mild fever",
+                "muscle pain",
+                "nausea",
+                "vomiting",
+                "yellowing of eyes",
+                "yellowish skin"
+            ],
+            "conditions": [
+                {
+                    "name": "hepatitis a",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_hepatitis_a_abdominal_pain",
+                    "question": "Have you been suffering from abdominal pain lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis a",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_a_dark_urine",
+                    "question": "Have you been suffering from dark urine lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis a",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_a_diarrhoea",
+                    "question": "Have you been suffering from diarrhoea lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis a",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_hepatitis_a_joint_pain",
+                    "question": "Have you been suffering from joint pain lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis a",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_hepatitis_a_loss_of_appetite",
+                    "question": "Have you been suffering from loss of appetite lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis a",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_a_mild_fever",
+                    "question": "Have you been suffering from mild fever lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis a",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hepatitis_a_muscle_pain",
+                    "question": "Have you been suffering from muscle pain lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis a",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_hepatitis_a_nausea",
+                    "question": "Have you been suffering from nausea lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis a",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hepatitis_a_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis a",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hepatitis_a_yellowing_of_eyes",
+                    "question": "Have you been suffering from yellowing of eyes lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis a",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_a_yellowish_skin",
+                    "question": "Have you been suffering from yellowish skin lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis a",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "abdominal pain",
+                "dark urine",
+                "fatigue",
+                "itching",
+                "lethargy",
+                "loss of appetite",
+                "malaise",
+                "receiving blood transfusion",
+                "receiving unsterile injections",
+                "yellow urine",
+                "yellowing of eyes",
+                "yellowish skin"
+            ],
+            "conditions": [
+                {
+                    "name": "hepatitis b",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_hepatitis_b_abdominal_pain",
+                    "question": "Have you been suffering from abdominal pain lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis b",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_b_dark_urine",
+                    "question": "Have you been suffering from dark urine lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis b",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_b_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis b",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_b_itching",
+                    "question": "Have you been suffering from itching lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis b",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 1
+                },
+                {
+                    "id": "q_hepatitis_b_lethargy",
+                    "question": "Have you been suffering from lethargy lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis b",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_hepatitis_b_loss_of_appetite",
+                    "question": "Have you been suffering from loss of appetite lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis b",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_b_malaise",
+                    "question": "Have you been suffering from malaise lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis b",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_hepatitis_b_receiving_blood_transfusion",
+                    "question": "Have you been suffering from receiving blood transfusion lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis b",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hepatitis_b_receiving_unsterile_injections",
+                    "question": "Have you been suffering from receiving unsterile injections lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis b",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_hepatitis_b_yellow_urine",
+                    "question": "Have you been suffering from yellow urine lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis b",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_b_yellowing_of_eyes",
+                    "question": "Have you been suffering from yellowing of eyes lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis b",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_b_yellowish_skin",
+                    "question": "Have you been suffering from yellowish skin lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis b",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "family history",
+                "fatigue",
+                "loss of appetite",
+                "nausea",
+                "yellowing of eyes",
+                "yellowish skin"
+            ],
+            "conditions": [
+                {
+                    "name": "hepatitis c",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_hepatitis_c_family_history",
+                    "question": "Have you been suffering from family history lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis c",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hepatitis_c_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis c",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_c_loss_of_appetite",
+                    "question": "Have you been suffering from loss of appetite lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis c",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_c_nausea",
+                    "question": "Have you been suffering from nausea lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis c",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hepatitis_c_yellowing_of_eyes",
+                    "question": "Have you been suffering from yellowing of eyes lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis c",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_c_yellowish_skin",
+                    "question": "Have you been suffering from yellowish skin lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis c",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "abdominal pain",
+                "dark urine",
+                "fatigue",
+                "joint pain",
+                "loss of appetite",
+                "nausea",
+                "vomiting",
+                "yellowing of eyes",
+                "yellowish skin"
+            ],
+            "conditions": [
+                {
+                    "name": "hepatitis d",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_hepatitis_d_abdominal_pain",
+                    "question": "Have you been suffering from abdominal pain lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis d",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_d_dark_urine",
+                    "question": "Have you been suffering from dark urine lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis d",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_d_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis d",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_d_joint_pain",
+                    "question": "Have you been suffering from joint pain lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis d",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_hepatitis_d_loss_of_appetite",
+                    "question": "Have you been suffering from loss of appetite lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis d",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_d_nausea",
+                    "question": "Have you been suffering from nausea lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis d",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hepatitis_d_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis d",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hepatitis_d_yellowing_of_eyes",
+                    "question": "Have you been suffering from yellowing of eyes lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis d",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_d_yellowish_skin",
+                    "question": "Have you been suffering from yellowish skin lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis d",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "abdominal pain",
+                "acute liver failure",
+                "coma",
+                "dark urine",
+                "fatigue",
+                "high fever",
+                "joint pain",
+                "loss of appetite",
+                "nausea",
+                "stomach bleeding",
+                "vomiting",
+                "yellowing of eyes",
+                "yellowish skin"
+            ],
+            "conditions": [
+                {
+                    "name": "hepatitis e",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_hepatitis_e_abdominal_pain",
+                    "question": "Have you been suffering from abdominal pain lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis e",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_e_acute_liver_failure",
+                    "question": "Have you been suffering from acute liver failure lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis e",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_hepatitis_e_coma",
+                    "question": "Have you been suffering from coma lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis e",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_hepatitis_e_dark_urine",
+                    "question": "Have you been suffering from dark urine lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis e",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_e_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis e",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_e_high_fever",
+                    "question": "Have you been suffering from high fever lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis e",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_hepatitis_e_joint_pain",
+                    "question": "Have you been suffering from joint pain lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis e",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_hepatitis_e_loss_of_appetite",
+                    "question": "Have you been suffering from loss of appetite lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis e",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_e_nausea",
+                    "question": "Have you been suffering from nausea lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis e",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hepatitis_e_stomach_bleeding",
+                    "question": "Have you been suffering from stomach bleeding lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis e",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_hepatitis_e_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis e",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hepatitis_e_yellowing_of_eyes",
+                    "question": "Have you been suffering from yellowing of eyes lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis e",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hepatitis_e_yellowish_skin",
+                    "question": "Have you been suffering from yellowish skin lately?",
+                    "boosts": [
+                        {
+                            "name": "hepatitis e",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "abdominal pain",
+                "distention of abdomen",
+                "fluid overload",
+                "history of alcohol consumption",
+                "swelling of stomach",
+                "vomiting",
+                "yellowish skin"
+            ],
+            "conditions": [
+                {
+                    "name": "alcoholic hepatitis",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_alcoholic_hepatitis_abdominal_pain",
+                    "question": "Have you been suffering from abdominal pain lately?",
+                    "boosts": [
+                        {
+                            "name": "alcoholic hepatitis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_alcoholic_hepatitis_distention_of_abdomen",
+                    "question": "Have you been suffering from distention of abdomen lately?",
+                    "boosts": [
+                        {
+                            "name": "alcoholic hepatitis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_alcoholic_hepatitis_fluid_overload",
+                    "question": "Have you been suffering from fluid overload lately?",
+                    "boosts": [
+                        {
+                            "name": "alcoholic hepatitis",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_alcoholic_hepatitis_history_of_alcohol_consumption",
+                    "question": "Have you been suffering from history of alcohol consumption lately?",
+                    "boosts": [
+                        {
+                            "name": "alcoholic hepatitis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_alcoholic_hepatitis_swelling_of_stomach",
+                    "question": "Have you been suffering from swelling of stomach lately?",
+                    "boosts": [
+                        {
+                            "name": "alcoholic hepatitis",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_alcoholic_hepatitis_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "alcoholic hepatitis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_alcoholic_hepatitis_yellowish_skin",
+                    "question": "Have you been suffering from yellowish skin lately?",
+                    "boosts": [
+                        {
+                            "name": "alcoholic hepatitis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "blood in sputum",
+                "breathlessness",
+                "chest pain",
+                "chills",
+                "cough",
+                "fatigue",
+                "high fever",
+                "loss of appetite",
+                "malaise",
+                "mild fever",
+                "phlegm",
+                "sweating",
+                "swelled lymph nodes",
+                "vomiting",
+                "weight loss",
+                "yellowing of eyes"
+            ],
+            "conditions": [
+                {
+                    "name": "tuberculosis",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_tuberculosis_blood_in_sputum",
+                    "question": "Have you been suffering from blood in sputum lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_tuberculosis_breathlessness",
+                    "question": "Have you been suffering from breathlessness lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_tuberculosis_chest_pain",
+                    "question": "Have you been suffering from chest pain lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_tuberculosis_chills",
+                    "question": "Have you been suffering from chills lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_tuberculosis_cough",
+                    "question": "Have you been suffering from cough lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_tuberculosis_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_tuberculosis_high_fever",
+                    "question": "Have you been suffering from high fever lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_tuberculosis_loss_of_appetite",
+                    "question": "Have you been suffering from loss of appetite lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_tuberculosis_malaise",
+                    "question": "Have you been suffering from malaise lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_tuberculosis_mild_fever",
+                    "question": "Have you been suffering from mild fever lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_tuberculosis_phlegm",
+                    "question": "Have you been suffering from phlegm lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_tuberculosis_sweating",
+                    "question": "Have you been suffering from sweating lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_tuberculosis_swelled_lymph_nodes",
+                    "question": "Have you been suffering from swelled lymph nodes lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_tuberculosis_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_tuberculosis_weight_loss",
+                    "question": "Have you been suffering from weight loss lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_tuberculosis_yellowing_of_eyes",
+                    "question": "Have you been suffering from yellowing of eyes lately?",
+                    "boosts": [
+                        {
+                            "name": "tuberculosis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "chest pain",
+                "chills",
+                "congestion",
+                "continuous sneezing",
+                "cough",
+                "fatigue",
+                "headache",
+                "high fever",
+                "loss of smell",
+                "malaise",
+                "muscle pain",
+                "phlegm",
+                "redness of eyes",
+                "runny nose",
+                "sinus pressure",
+                "swelled lymph nodes",
+                "throat irritation"
+            ],
+            "conditions": [
+                {
+                    "name": "common cold",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_common_cold_chest_pain",
+                    "question": "Have you been suffering from chest pain lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_common_cold_chills",
+                    "question": "Have you been suffering from chills lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_common_cold_congestion",
+                    "question": "Have you been suffering from congestion lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_common_cold_continuous_sneezing",
+                    "question": "Have you been suffering from continuous sneezing lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_common_cold_cough",
+                    "question": "Have you been suffering from cough lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_common_cold_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_common_cold_headache",
+                    "question": "Have you been suffering from headache lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_common_cold_high_fever",
+                    "question": "Have you been suffering from high fever lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_common_cold_loss_of_smell",
+                    "question": "Have you been suffering from loss of smell lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_common_cold_malaise",
+                    "question": "Have you been suffering from malaise lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_common_cold_muscle_pain",
+                    "question": "Have you been suffering from muscle pain lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_common_cold_phlegm",
+                    "question": "Have you been suffering from phlegm lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_common_cold_redness_of_eyes",
+                    "question": "Have you been suffering from redness of eyes lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_common_cold_runny_nose",
+                    "question": "Have you been suffering from runny nose lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_common_cold_sinus_pressure",
+                    "question": "Have you been suffering from sinus pressure lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_common_cold_swelled_lymph_nodes",
+                    "question": "Have you been suffering from swelled lymph nodes lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_common_cold_throat_irritation",
+                    "question": "Have you been suffering from throat irritation lately?",
+                    "boosts": [
+                        {
+                            "name": "common cold",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "breathlessness",
+                "chest pain",
+                "chills",
+                "cough",
+                "fast heart rate",
+                "fatigue",
+                "high fever",
+                "malaise",
+                "phlegm",
+                "rusty sputum",
+                "sweating"
+            ],
+            "conditions": [
+                {
+                    "name": "pneumonia",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_pneumonia_breathlessness",
+                    "question": "Have you been suffering from breathlessness lately?",
+                    "boosts": [
+                        {
+                            "name": "pneumonia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_pneumonia_chest_pain",
+                    "question": "Have you been suffering from chest pain lately?",
+                    "boosts": [
+                        {
+                            "name": "pneumonia",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_pneumonia_chills",
+                    "question": "Have you been suffering from chills lately?",
+                    "boosts": [
+                        {
+                            "name": "pneumonia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_pneumonia_cough",
+                    "question": "Have you been suffering from cough lately?",
+                    "boosts": [
+                        {
+                            "name": "pneumonia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_pneumonia_fast_heart_rate",
+                    "question": "Have you been suffering from fast heart rate lately?",
+                    "boosts": [
+                        {
+                            "name": "pneumonia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_pneumonia_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "pneumonia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_pneumonia_high_fever",
+                    "question": "Have you been suffering from high fever lately?",
+                    "boosts": [
+                        {
+                            "name": "pneumonia",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_pneumonia_malaise",
+                    "question": "Have you been suffering from malaise lately?",
+                    "boosts": [
+                        {
+                            "name": "pneumonia",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_pneumonia_phlegm",
+                    "question": "Have you been suffering from phlegm lately?",
+                    "boosts": [
+                        {
+                            "name": "pneumonia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_pneumonia_rusty_sputum",
+                    "question": "Have you been suffering from rusty sputum lately?",
+                    "boosts": [
+                        {
+                            "name": "pneumonia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_pneumonia_sweating",
+                    "question": "Have you been suffering from sweating lately?",
+                    "boosts": [
+                        {
+                            "name": "pneumonia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "bloody stool",
+                "constipation",
+                "irritation in anus",
+                "pain during bowel movements",
+                "pain in anal region"
+            ],
+            "conditions": [
+                {
+                    "name": "dimorphic hemmorhoids(piles)",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_dimorphic_hemmorhoids_piles_bloody_stool",
+                    "question": "Have you been suffering from bloody stool lately?",
+                    "boosts": [
+                        {
+                            "name": "dimorphic hemmorhoids(piles)",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_dimorphic_hemmorhoids_piles_constipation",
+                    "question": "Have you been suffering from constipation lately?",
+                    "boosts": [
+                        {
+                            "name": "dimorphic hemmorhoids(piles)",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_dimorphic_hemmorhoids_piles_irritation_in_anus",
+                    "question": "Have you been suffering from irritation in anus lately?",
+                    "boosts": [
+                        {
+                            "name": "dimorphic hemmorhoids(piles)",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_dimorphic_hemmorhoids_piles_pain_during_bowel_movements",
+                    "question": "Have you been suffering from pain during bowel movements lately?",
+                    "boosts": [
+                        {
+                            "name": "dimorphic hemmorhoids(piles)",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_dimorphic_hemmorhoids_piles_pain_in_anal_region",
+                    "question": "Have you been suffering from pain in anal region lately?",
+                    "boosts": [
+                        {
+                            "name": "dimorphic hemmorhoids(piles)",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "breathlessness",
+                "chest pain",
+                "sweating",
+                "vomiting"
+            ],
+            "conditions": [
+                {
+                    "name": "heart attack",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_heart_attack_breathlessness",
+                    "question": "Have you been suffering from breathlessness lately?",
+                    "boosts": [
+                        {
+                            "name": "heart attack",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_heart_attack_chest_pain",
+                    "question": "Have you been suffering from chest pain lately?",
+                    "boosts": [
+                        {
+                            "name": "heart attack",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_heart_attack_sweating",
+                    "question": "Have you been suffering from sweating lately?",
+                    "boosts": [
+                        {
+                            "name": "heart attack",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_heart_attack_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "heart attack",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "bruising",
+                "cramps",
+                "fatigue",
+                "obesity",
+                "prominent veins on calf",
+                "swollen blood vessels",
+                "swollen legs"
+            ],
+            "conditions": [
+                {
+                    "name": "varicose veins",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_varicose_veins_bruising",
+                    "question": "Have you been suffering from bruising lately?",
+                    "boosts": [
+                        {
+                            "name": "varicose veins",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_varicose_veins_cramps",
+                    "question": "Have you been suffering from cramps lately?",
+                    "boosts": [
+                        {
+                            "name": "varicose veins",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_varicose_veins_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "varicose veins",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_varicose_veins_obesity",
+                    "question": "Have you been suffering from obesity lately?",
+                    "boosts": [
+                        {
+                            "name": "varicose veins",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_varicose_veins_prominent_veins_on_calf",
+                    "question": "Have you been suffering from prominent veins on calf lately?",
+                    "boosts": [
+                        {
+                            "name": "varicose veins",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_varicose_veins_swollen_blood_vessels",
+                    "question": "Have you been suffering from swollen blood vessels lately?",
+                    "boosts": [
+                        {
+                            "name": "varicose veins",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_varicose_veins_swollen_legs",
+                    "question": "Have you been suffering from swollen legs lately?",
+                    "boosts": [
+                        {
+                            "name": "varicose veins",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "abnormal menstruation",
+                "brittle nails",
+                "cold hands and feets",
+                "depression",
+                "dizziness",
+                "enlarged thyroid",
+                "fatigue",
+                "irritability",
+                "lethargy",
+                "mood swings",
+                "puffy face and eyes",
+                "swollen extremeties",
+                "weight gain"
+            ],
+            "conditions": [
+                {
+                    "name": "hypothyroidism",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_hypothyroidism_abnormal_menstruation",
+                    "question": "Have you been suffering from abnormal menstruation lately?",
+                    "boosts": [
+                        {
+                            "name": "hypothyroidism",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_hypothyroidism_brittle_nails",
+                    "question": "Have you been suffering from brittle nails lately?",
+                    "boosts": [
+                        {
+                            "name": "hypothyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hypothyroidism_cold_hands_and_feets",
+                    "question": "Have you been suffering from cold hands and feets lately?",
+                    "boosts": [
+                        {
+                            "name": "hypothyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hypothyroidism_depression",
+                    "question": "Have you been suffering from depression lately?",
+                    "boosts": [
+                        {
+                            "name": "hypothyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_hypothyroidism_dizziness",
+                    "question": "Have you been suffering from dizziness lately?",
+                    "boosts": [
+                        {
+                            "name": "hypothyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hypothyroidism_enlarged_thyroid",
+                    "question": "Have you been suffering from enlarged thyroid lately?",
+                    "boosts": [
+                        {
+                            "name": "hypothyroidism",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_hypothyroidism_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "hypothyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hypothyroidism_irritability",
+                    "question": "Have you been suffering from irritability lately?",
+                    "boosts": [
+                        {
+                            "name": "hypothyroidism",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_hypothyroidism_lethargy",
+                    "question": "Have you been suffering from lethargy lately?",
+                    "boosts": [
+                        {
+                            "name": "hypothyroidism",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_hypothyroidism_mood_swings",
+                    "question": "Have you been suffering from mood swings lately?",
+                    "boosts": [
+                        {
+                            "name": "hypothyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_hypothyroidism_puffy_face_and_eyes",
+                    "question": "Have you been suffering from puffy face and eyes lately?",
+                    "boosts": [
+                        {
+                            "name": "hypothyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hypothyroidism_swollen_extremeties",
+                    "question": "Have you been suffering from swollen extremeties lately?",
+                    "boosts": [
+                        {
+                            "name": "hypothyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hypothyroidism_weight_gain",
+                    "question": "Have you been suffering from weight gain lately?",
+                    "boosts": [
+                        {
+                            "name": "hypothyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "abnormal menstruation",
+                "diarrhoea",
+                "excessive hunger",
+                "fast heart rate",
+                "fatigue",
+                "irritability",
+                "mood swings",
+                "muscle weakness",
+                "restlessness",
+                "sweating",
+                "weight loss"
+            ],
+            "conditions": [
+                {
+                    "name": "hyperthyroidism",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_hyperthyroidism_abnormal_menstruation",
+                    "question": "Have you been suffering from abnormal menstruation lately?",
+                    "boosts": [
+                        {
+                            "name": "hyperthyroidism",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_hyperthyroidism_diarrhoea",
+                    "question": "Have you been suffering from diarrhoea lately?",
+                    "boosts": [
+                        {
+                            "name": "hyperthyroidism",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_hyperthyroidism_excessive_hunger",
+                    "question": "Have you been suffering from excessive hunger lately?",
+                    "boosts": [
+                        {
+                            "name": "hyperthyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hyperthyroidism_fast_heart_rate",
+                    "question": "Have you been suffering from fast heart rate lately?",
+                    "boosts": [
+                        {
+                            "name": "hyperthyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hyperthyroidism_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "hyperthyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hyperthyroidism_irritability",
+                    "question": "Have you been suffering from irritability lately?",
+                    "boosts": [
+                        {
+                            "name": "hyperthyroidism",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_hyperthyroidism_mood_swings",
+                    "question": "Have you been suffering from mood swings lately?",
+                    "boosts": [
+                        {
+                            "name": "hyperthyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_hyperthyroidism_muscle_weakness",
+                    "question": "Have you been suffering from muscle weakness lately?",
+                    "boosts": [
+                        {
+                            "name": "hyperthyroidism",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_hyperthyroidism_restlessness",
+                    "question": "Have you been suffering from restlessness lately?",
+                    "boosts": [
+                        {
+                            "name": "hyperthyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hyperthyroidism_sweating",
+                    "question": "Have you been suffering from sweating lately?",
+                    "boosts": [
+                        {
+                            "name": "hyperthyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_hyperthyroidism_weight_loss",
+                    "question": "Have you been suffering from weight loss lately?",
+                    "boosts": [
+                        {
+                            "name": "hyperthyroidism",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "anxiety",
+                "blurred and distorted vision",
+                "drying and tingling lips",
+                "excessive hunger",
+                "fatigue",
+                "headache",
+                "irritability",
+                "nausea",
+                "palpitations",
+                "slurred speech",
+                "sweating",
+                "vomiting"
+            ],
+            "conditions": [
+                {
+                    "name": "hypoglycemia",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_hypoglycemia_anxiety",
+                    "question": "Have you been suffering from anxiety lately?",
+                    "boosts": [
+                        {
+                            "name": "hypoglycemia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hypoglycemia_blurred_and_distorted_vision",
+                    "question": "Have you been suffering from blurred and distorted vision lately?",
+                    "boosts": [
+                        {
+                            "name": "hypoglycemia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hypoglycemia_drying_and_tingling_lips",
+                    "question": "Have you been suffering from drying and tingling lips lately?",
+                    "boosts": [
+                        {
+                            "name": "hypoglycemia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hypoglycemia_excessive_hunger",
+                    "question": "Have you been suffering from excessive hunger lately?",
+                    "boosts": [
+                        {
+                            "name": "hypoglycemia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hypoglycemia_fatigue",
+                    "question": "Have you been suffering from fatigue lately?",
+                    "boosts": [
+                        {
+                            "name": "hypoglycemia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hypoglycemia_headache",
+                    "question": "Have you been suffering from headache lately?",
+                    "boosts": [
+                        {
+                            "name": "hypoglycemia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_hypoglycemia_irritability",
+                    "question": "Have you been suffering from irritability lately?",
+                    "boosts": [
+                        {
+                            "name": "hypoglycemia",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_hypoglycemia_nausea",
+                    "question": "Have you been suffering from nausea lately?",
+                    "boosts": [
+                        {
+                            "name": "hypoglycemia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_hypoglycemia_palpitations",
+                    "question": "Have you been suffering from palpitations lately?",
+                    "boosts": [
+                        {
+                            "name": "hypoglycemia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hypoglycemia_slurred_speech",
+                    "question": "Have you been suffering from slurred speech lately?",
+                    "boosts": [
+                        {
+                            "name": "hypoglycemia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_hypoglycemia_sweating",
+                    "question": "Have you been suffering from sweating lately?",
+                    "boosts": [
+                        {
+                            "name": "hypoglycemia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_hypoglycemia_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "hypoglycemia",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "hip joint pain",
+                "joint pain",
+                "knee pain",
+                "neck pain",
+                "painful walking",
+                "swelling joints"
+            ],
+            "conditions": [
+                {
+                    "name": "osteoarthristis",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_osteoarthristis_hip_joint_pain",
+                    "question": "Have you been suffering from hip joint pain lately?",
+                    "boosts": [
+                        {
+                            "name": "osteoarthristis",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_osteoarthristis_joint_pain",
+                    "question": "Have you been suffering from joint pain lately?",
+                    "boosts": [
+                        {
+                            "name": "osteoarthristis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_osteoarthristis_knee_pain",
+                    "question": "Have you been suffering from knee pain lately?",
+                    "boosts": [
+                        {
+                            "name": "osteoarthristis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_osteoarthristis_neck_pain",
+                    "question": "Have you been suffering from neck pain lately?",
+                    "boosts": [
+                        {
+                            "name": "osteoarthristis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_osteoarthristis_painful_walking",
+                    "question": "Have you been suffering from painful walking lately?",
+                    "boosts": [
+                        {
+                            "name": "osteoarthristis",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_osteoarthristis_swelling_joints",
+                    "question": "Have you been suffering from swelling joints lately?",
+                    "boosts": [
+                        {
+                            "name": "osteoarthristis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "movement stiffness",
+                "muscle weakness",
+                "painful walking",
+                "stiff neck",
+                "swelling joints"
+            ],
+            "conditions": [
+                {
+                    "name": "arthritis",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_arthritis_movement_stiffness",
+                    "question": "Have you been suffering from movement stiffness lately?",
+                    "boosts": [
+                        {
+                            "name": "arthritis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_arthritis_muscle_weakness",
+                    "question": "Have you been suffering from muscle weakness lately?",
+                    "boosts": [
+                        {
+                            "name": "arthritis",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_arthritis_painful_walking",
+                    "question": "Have you been suffering from painful walking lately?",
+                    "boosts": [
+                        {
+                            "name": "arthritis",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_arthritis_stiff_neck",
+                    "question": "Have you been suffering from stiff neck lately?",
+                    "boosts": [
+                        {
+                            "name": "arthritis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_arthritis_swelling_joints",
+                    "question": "Have you been suffering from swelling joints lately?",
+                    "boosts": [
+                        {
+                            "name": "arthritis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "headache",
+                "loss of balance",
+                "nausea",
+                "spinning movements",
+                "unsteadiness",
+                "vomiting"
+            ],
+            "conditions": [
+                {
+                    "name": "(vertigo) paroymsal  positional vertigo",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_vertigo_paroymsal_positional_vertigo_headache",
+                    "question": "Have you been suffering from headache lately?",
+                    "boosts": [
+                        {
+                            "name": "(vertigo) paroymsal  positional vertigo",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_vertigo_paroymsal_positional_vertigo_loss_of_balance",
+                    "question": "Have you been suffering from loss of balance lately?",
+                    "boosts": [
+                        {
+                            "name": "(vertigo) paroymsal  positional vertigo",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_vertigo_paroymsal_positional_vertigo_nausea",
+                    "question": "Have you been suffering from nausea lately?",
+                    "boosts": [
+                        {
+                            "name": "(vertigo) paroymsal  positional vertigo",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                },
+                {
+                    "id": "q_vertigo_paroymsal_positional_vertigo_spinning_movements",
+                    "question": "Have you been suffering from spinning movements lately?",
+                    "boosts": [
+                        {
+                            "name": "(vertigo) paroymsal  positional vertigo",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_vertigo_paroymsal_positional_vertigo_unsteadiness",
+                    "question": "Have you been suffering from unsteadiness lately?",
+                    "boosts": [
+                        {
+                            "name": "(vertigo) paroymsal  positional vertigo",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_vertigo_paroymsal_positional_vertigo_vomiting",
+                    "question": "Have you been suffering from vomiting lately?",
+                    "boosts": [
+                        {
+                            "name": "(vertigo) paroymsal  positional vertigo",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 5
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "blackheads",
+                "pus filled pimples",
+                "scurring",
+                "skin rash"
+            ],
+            "conditions": [
+                {
+                    "name": "acne",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_acne_blackheads",
+                    "question": "Have you been suffering from blackheads lately?",
+                    "boosts": [
+                        {
+                            "name": "acne",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_acne_pus_filled_pimples",
+                    "question": "Have you been suffering from pus filled pimples lately?",
+                    "boosts": [
+                        {
+                            "name": "acne",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_acne_scurring",
+                    "question": "Have you been suffering from scurring lately?",
+                    "boosts": [
+                        {
+                            "name": "acne",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_acne_skin_rash",
+                    "question": "Have you been suffering from skin rash lately?",
+                    "boosts": [
+                        {
+                            "name": "acne",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "bladder discomfort",
+                "burning micturition",
+                "continuous feel of urine",
+                "foul smell of urine"
+            ],
+            "conditions": [
+                {
+                    "name": "urinary tract infection",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_urinary_tract_infection_bladder_discomfort",
+                    "question": "Have you been suffering from bladder discomfort lately?",
+                    "boosts": [
+                        {
+                            "name": "urinary tract infection",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_urinary_tract_infection_burning_micturition",
+                    "question": "Have you been suffering from burning micturition lately?",
+                    "boosts": [
+                        {
+                            "name": "urinary tract infection",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_urinary_tract_infection_continuous_feel_of_urine",
+                    "question": "Have you been suffering from continuous feel of urine lately?",
+                    "boosts": [
+                        {
+                            "name": "urinary tract infection",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 6
+                },
+                {
+                    "id": "q_urinary_tract_infection_foul_smell_of_urine",
+                    "question": "Have you been suffering from foul smell of urine lately?",
+                    "boosts": [
+                        {
+                            "name": "urinary tract infection",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 1
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "inflammatory nails",
+                "joint pain",
+                "silver like dusting",
+                "skin peeling",
+                "skin rash",
+                "small dents in nails"
+            ],
+            "conditions": [
+                {
+                    "name": "psoriasis",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_psoriasis_inflammatory_nails",
+                    "question": "Have you been suffering from inflammatory nails lately?",
+                    "boosts": [
+                        {
+                            "name": "psoriasis",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_psoriasis_joint_pain",
+                    "question": "Have you been suffering from joint pain lately?",
+                    "boosts": [
+                        {
+                            "name": "psoriasis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_psoriasis_silver_like_dusting",
+                    "question": "Have you been suffering from silver like dusting lately?",
+                    "boosts": [
+                        {
+                            "name": "psoriasis",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_psoriasis_skin_peeling",
+                    "question": "Have you been suffering from skin peeling lately?",
+                    "boosts": [
+                        {
+                            "name": "psoriasis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_psoriasis_skin_rash",
+                    "question": "Have you been suffering from skin rash lately?",
+                    "boosts": [
+                        {
+                            "name": "psoriasis",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_psoriasis_small_dents_in_nails",
+                    "question": "Have you been suffering from small dents in nails lately?",
+                    "boosts": [
+                        {
+                            "name": "psoriasis",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                }
+            ]
+        },
+        {
+            "symptoms": [
+                "blister",
+                "high fever",
+                "red sore around nose",
+                "skin rash",
+                "yellow crust ooze"
+            ],
+            "conditions": [
+                {
+                    "name": "impetigo",
+                    "score": 0.65
+                }
+            ],
+            "follow_ups": [
+                {
+                    "id": "q_impetigo_blister",
+                    "question": "Have you been suffering from blister lately?",
+                    "boosts": [
+                        {
+                            "name": "impetigo",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 4
+                },
+                {
+                    "id": "q_impetigo_high_fever",
+                    "question": "Have you been suffering from high fever lately?",
+                    "boosts": [
+                        {
+                            "name": "impetigo",
+                            "value": 0.35
+                        }
+                    ],
+                    "severity": 7
+                },
+                {
+                    "id": "q_impetigo_red_sore_around_nose",
+                    "question": "Have you been suffering from red sore around nose lately?",
+                    "boosts": [
+                        {
+                            "name": "impetigo",
+                            "value": 0.1
+                        }
+                    ],
+                    "severity": 2
+                },
+                {
+                    "id": "q_impetigo_skin_rash",
+                    "question": "Have you been suffering from skin rash lately?",
+                    "boosts": [
+                        {
+                            "name": "impetigo",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                },
+                {
+                    "id": "q_impetigo_yellow_crust_ooze",
+                    "question": "Have you been suffering from yellow crust ooze lately?",
+                    "boosts": [
+                        {
+                            "name": "impetigo",
+                            "value": 0.2
+                        }
+                    ],
+                    "severity": 3
+                }
+            ]
+        }
+    ]
+}
