@@ -75,6 +75,7 @@ pytest tests/
 python scripts/test_rag_chain.py
 ```
 
+
 ## Project Integrity Check
 
 Run the full validation suite:
@@ -90,22 +91,6 @@ This verifies:
 - Full unit test suite execution
 
 ---
-
-
-
-- **Gateway**: Nginx + ModSecurity WAF + OWASP CRS (SSL/TLS)
-- **Frontend**: Streamlit (Polling Architecture)
-- **Backend**: FastAPI (Async Task Queue)
-- **Worker**: Celery + Redis (Offloaded Inference)
-- **AI Core**: BioMistral (LLM) + TensorFlow (Vision)
-- **Observability**: OpenTelemetry + Jaeger + Prometheus
-
-Security features from the archived version:
-- **WAF**: Blocks SQL Injection, XSS (ModSecurity)
-- **Semantic Firewall**: Blocks Prompt Injection attacks
-- **Rate Limiting**: 20 req/min throttling (SlowAPI)
-- **Compliance**: PII Scrubbing & Encrypted DB Connections
-- **Supply Chain**: Automated Trivy vulnerability scanning
 
 ## Architectural Evolution
 

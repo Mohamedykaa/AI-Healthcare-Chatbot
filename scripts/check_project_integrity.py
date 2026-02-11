@@ -7,7 +7,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -103,7 +102,7 @@ def check_pytest_suite() -> bool:
         print("PASS: test suite completed successfully")
         print(result.stdout.strip())
         return True
-
+    
     print("FAIL: test suite failed")
     print(result.stdout.strip())
     print(result.stderr.strip())
@@ -112,19 +111,18 @@ def check_pytest_suite() -> bool:
 
 def main() -> None:
     checks = [
-        ("python", check_python_environment()),
-        ("files", check_required_files()),
-        ("imports", check_imports()),
-        ("pytest", check_pytest_suite()),
+        check_python_environment(),
+        check_required_files(),
+        check_imports(),
+        check_pytest_suite(),
     ]
 
-    failed = [name for name, ok in checks if not ok]
+    if not all(checks):
+        _print_header("Summary")
+        print(f"Integrity check completed with failures.")
+        sys.exit(1)
 
-    _print_header("Summary")
-    if failed:
-        print(f"Integrity check completed with failures: {', '.join(failed)}")
-        raise SystemExit(1)
-
+    print("\n=== Summary ===")
     print("Integrity check passed. Project looks good.")
 
 
