@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import argparse
 import importlib.util
 import subprocess
 import sys
 from pathlib import Path
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -59,7 +61,8 @@ def check_required_files() -> bool:
 def check_imports(strict: bool = False) -> bool:
     """Verify that core runtime/test dependencies are importable.
 
-    Missing imports are reported as warnings by default, but as failures in strict mode.
+    In default mode, missing imports are warnings to support lightweight dev/CI
+    environments. In strict mode, missing imports fail the check.
     """
     _print_header("Dependency Imports")
     modules = [
@@ -68,11 +71,11 @@ def check_imports(strict: bool = False) -> bool:
         "langchain_community",
         "chromadb",
         "numpy",
+        "dotenv",
         "pytest",
-        "dotenv",  # python-dotenv
     ]
 
-    missing = []
+    missing: list[str] = []
     for module in modules:
         if importlib.util.find_spec(module) is not None:
             print(f"PASS: import {module}")
@@ -81,13 +84,17 @@ def check_imports(strict: bool = False) -> bool:
             level = "FAIL" if strict else "WARN"
             print(f"{level}: cannot import {module}")
 
-    if missing:
-        if strict:
-            print("FAIL: Missing runtime dependencies in strict mode.")
-            return False
-        print("WARN: Some runtime packages are not installed in this environment.")
-        print("      Install requirements_chainlit.txt for full runtime validation.")
+    if not missing:
+        return True
 
+    if strict:
+        print("FAIL: Missing runtime/test packages in strict mode.")
+        print("      Install requirements_chainlit.txt before running strict checks.")
+        return False
+
+    print("WARN: Some runtime packages are not installed in this environment.")
+    print("      Install requirements_chainlit.txt for full runtime validation.")
+    print("      Tip: Run strict mode with '--strict-imports' in CI/release gates.")
     return True
 
 
@@ -106,7 +113,7 @@ def check_pytest_suite() -> bool:
         print("PASS: test suite completed successfully")
         print(result.stdout.strip())
         return True
-    
+
     print("FAIL: test suite failed")
     print(result.stdout.strip())
     print(result.stderr.strip())
@@ -114,34 +121,28 @@ def check_pytest_suite() -> bool:
 
 
 def main() -> None:
-    strict_mode = "--strict" in sys.argv
-    if strict_mode:
-        _print_header("STRICT MODE ENABLED")
+    parser = argparse.ArgumentParser(description="Run project integrity checks.")
+    parser.add_argument(
+        "--strict-imports",
+        action="store_true",
+        help="Fail when dependency imports are missing.",
+    )
+    args = parser.parse_args()
 
-    # In strict mode, any check failure (even warnings) causes exit 1
     checks = [
         ("python", check_python_environment()),
         ("files", check_required_files()),
-        ("imports", check_imports(strict=strict_mode)),
+        ("imports", check_imports(strict=args.strict_imports)),
         ("pytest", check_pytest_suite()),
     ]
 
     failed = [name for name, ok in checks if not ok]
 
+    _print_header("Summary")
     if failed:
-        _print_header("Summary")
-        print(f"Integrity check completed with failures in: {', '.join(failed)}")
-        if strict_mode:
-            sys.exit(1)
-        # In non-strict mode, only critical failures (like pytest) normally exit 1,
-        # but here we follow the logic: if pytest failed, we definitely want to exit 1.
-        # check_pytest_suite returns False on failure.
-        # check_imports returns True (with warning) in loose mode, False in strict.
-        
-        # If any check explicitly failed (returned False), we exit 1 for safety.
-        sys.exit(1)
+        print(f"Integrity check completed with failures: {', '.join(failed)}")
+        raise SystemExit(1)
 
-    print("\n=== Summary ===")
     print("Integrity check passed. Project looks good.")
 
 

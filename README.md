@@ -75,17 +75,18 @@ pytest tests/
 python scripts/test_rag_chain.py
 ```
 
-
 ## Project Integrity Check
 
 Run the full validation suite:
 
 ```bash
 python scripts/check_project_integrity.py
+```
 
-# For CI/CD (fails on warnings/missing optional deps):
-python scripts/check_project_integrity.py --strict
+For CI/release gates (strict dependency enforcement):
 
+```bash
+python scripts/check_project_integrity.py --strict-imports
 ```
 
 This verifies:
@@ -96,11 +97,29 @@ This verifies:
 
 ---
 
-## Architectural Evolution
+## 📂 Archived Architecture (Reference Only)
 
-Earlier microservices-based iterations of this project 
-(FastAPI, Docker, etc.) are preserved locally for reference 
-but are not included in this repository to keep it lightweight.
+The original production-grade microservices design is preserved in `/archive`:
+
+- **Gateway**: Nginx + ModSecurity WAF + OWASP CRS (SSL/TLS)
+- **Frontend**: Streamlit (Polling Architecture)
+- **Backend**: FastAPI (Async Task Queue)
+- **Worker**: Celery + Redis (Offloaded Inference)
+- **AI Core**: BioMistral (LLM) + TensorFlow (Vision)
+- **Observability**: OpenTelemetry + Jaeger + Prometheus
+
+Security features from the archived version:
+- **WAF**: Blocks SQL Injection, XSS (ModSecurity)
+- **Semantic Firewall**: Blocks Prompt Injection attacks
+- **Rate Limiting**: 20 req/min throttling (SlowAPI)
+- **Compliance**: PII Scrubbing & Encrypted DB Connections
+- **Supply Chain**: Automated Trivy vulnerability scanning
+
+```bash
+# (Archived) Docker deployment
+cd archive
+docker-compose up --build -d
+```
 
 ---
 

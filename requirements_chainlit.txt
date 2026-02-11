@@ -23,6 +23,7 @@ huggingface-hub==0.21.4
 # Pull model: ollama pull biomistral
 
 # Additional dependencies
+python-dotenv>=1.0.0
 tiktoken==0.6.0
 python-dotenv>=1.0.0
 pydantic>=2.0.0,<3.0.0
