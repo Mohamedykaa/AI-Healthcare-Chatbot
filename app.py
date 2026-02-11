@@ -61,14 +61,34 @@ LLM_MODEL = os.environ.get("LLM_MODEL", "llama3:8b")
 CHUNK_SIZE = int(os.environ.get("CHUNK_SIZE", "500"))
 CHUNK_OVERLAP = int(os.environ.get("CHUNK_OVERLAP", "50"))
 
-# Emergency keywords that require immediate escalation
-EMERGENCY_KEYWORDS = [
-    "chest pain", "heart attack", "stroke", "can't breathe", "cannot breathe",
-    "difficulty breathing", "severe bleeding", "loss of consciousness",
-    "unconscious", "fainting", "seizure", "severe head injury",
-    "poisoning", "overdose", "suicidal", "suicide", "self-harm",
-    "severe allergic reaction", "anaphylaxis", "choking"
+# Hard-stop emergency terms (always EMERGENCY regardless of score)
+CRITICAL_KEYWORDS = [
+    "heart attack", "stroke", "severe bleeding", "loss of consciousness",
+    "unconscious", "seizure", "severe head injury", "poisoning", "overdose",
+    "suicidal", "suicide", "self harm", "severe allergic reaction",
+    "anaphylaxis", "choking", "heatstroke", "sunstroke",
 ]
+
+# Score-driven triage terms
+ASSOCIATED_RED_FLAGS = [
+    "shortness of breath", "cold sweating",
+]
+
+CORE_SYMPTOM_KEYWORDS = [
+    "chest pain", "cannot breathe", "cant breathe", "difficulty breathing",
+    "fainting",
+]
+
+SEVERE_MODIFIERS = [
+    "severe", "crushing", "worst", "sudden",
+]
+
+LOW_RISK_MODIFIERS = [
+    "mild", "localized", "only when pressing", "brief",
+]
+
+EMERGENCY_SCORE_THRESHOLD = 6
+URGENT_SCORE_THRESHOLD = 3
 
 
 # ============================================================
@@ -309,16 +329,79 @@ def create_rag_chain(llm: ChatOllama, vectorstore: Chroma):
 # EMERGENCY DETECTION
 # ============================================================
 
+def normalize_input(text: str) -> str:
+    """Normalize free-text input for deterministic phrase matching."""
+    lowered = text.lower().strip()
+    lowered = re.sub(r"[^\w\s]", " ", lowered)
+    return re.sub(r"\s+", " ", lowered)
+
+
+def contains_phrase(text: str, phrase: str) -> bool:
+    """Check for phrase with word boundaries to avoid partial-word matches."""
+    escaped = re.escape(phrase)
+    pattern = rf"\b{escaped}\b"
+    return re.search(pattern, text) is not None
+
+
+def _match_category_phrases(normalized_input: str, phrases: List[str], used_phrases: set[str]) -> set[str]:
+    """Return new matched phrases not previously counted in higher-priority categories.
+
+    If a phrase is matched in a higher-precedence category, it is skipped in lower categories.
+    """
+    matched: set[str] = set()
+    for phrase in phrases:
+        if phrase in used_phrases:
+            continue
+        if contains_phrase(normalized_input, phrase):
+            matched.add(phrase)
+    return matched
+
+
+def calculate_risk_score(user_input: str) -> int:
+    """Calculate deterministic risk score with phrase-level dedup and precedence."""
+    normalized = normalize_input(user_input)
+    used_phrases: set[str] = set()
+    score = 0
+
+    red_flag_matches = _match_category_phrases(normalized, ASSOCIATED_RED_FLAGS, used_phrases)
+    used_phrases.update(red_flag_matches)
+    score += 3 * len(red_flag_matches)
+
+    core_matches = _match_category_phrases(normalized, CORE_SYMPTOM_KEYWORDS, used_phrases)
+    used_phrases.update(core_matches)
+    score += 3 * len(core_matches)
+
+    severe_matches = _match_category_phrases(normalized, SEVERE_MODIFIERS, used_phrases)
+    used_phrases.update(severe_matches)
+    score += 2 * len(severe_matches)
+
+    low_risk_matches = _match_category_phrases(normalized, LOW_RISK_MODIFIERS, used_phrases)
+    used_phrases.update(low_risk_matches)
+    score -= 2 * len(low_risk_matches)
+
+    return score
+
+
+def assess_risk_level(user_input: str) -> str:
+    """Assess triage level with hard-stop safety checks and score thresholds."""
+    normalized = normalize_input(user_input)
+
+    # Highest-priority category: hard stops are always emergency.
+    for keyword in CRITICAL_KEYWORDS:
+        if contains_phrase(normalized, keyword):
+            return "EMERGENCY"
+
+    score = calculate_risk_score(user_input)
+    if score >= EMERGENCY_SCORE_THRESHOLD:
+        return "EMERGENCY"
+    if score >= URGENT_SCORE_THRESHOLD:
+        return "URGENT"
+    return "ROUTINE"
+
+
 def check_for_emergency(user_input: str) -> bool:
-    """
-    Check if user input contains emergency symptoms.
-    Returns True if emergency detected.
-    """
-    user_lower = user_input.lower()
-    for keyword in EMERGENCY_KEYWORDS:
-        if keyword in user_lower:
-            return True
-    return False
+    """Backwards-compatible helper used by existing flow/tests."""
+    return assess_risk_level(user_input) == "EMERGENCY"
 
 
 def get_emergency_response() -> str:
@@ -376,25 +459,49 @@ def format_sources(context_documents: List[Document]) -> str:
 
 
 # ============================================================
-# GLOBAL INITIALIZATION (Module Level)
-# Runs ONCE when the server starts, preventing concurrent access issues
+# ROBUST STARTUP INITIALIZATION (lazy + retry + cached failure)
 # ============================================================
 
-print("🚀 Starting Medical Chatbot initialization...")
+_EMBEDDING_FUNCTION = None
+_VECTORSTORE = None
+_LLM = None
+_RAG_CHAIN = None
+_INITIALIZATION_ERROR = None
 
-# Initialize shared embeddings
-_EMBEDDING_FUNCTION = get_embedding_function()
 
-# Initialize shared vectorstore (created/loaded once)
-_VECTORSTORE = load_or_create_vectorstore(_EMBEDDING_FUNCTION)
+def initialize_components(max_retries: int = 2) -> None:
+    """Initialize shared components once with bounded retries.
 
-# Initialize shared LLM
-_LLM = get_llm()
+    Raises RuntimeError if initialization fails after retries.
+    """
+    global _EMBEDDING_FUNCTION, _VECTORSTORE, _LLM, _RAG_CHAIN, _INITIALIZATION_ERROR
 
-# Create shared RAG chain
-_RAG_CHAIN = create_rag_chain(_LLM, _VECTORSTORE)
+    if _RAG_CHAIN is not None and _VECTORSTORE is not None and _LLM is not None:
+        return
 
-print("✅ Medical Chatbot initialization complete!")
+    if _INITIALIZATION_ERROR is not None:
+        raise RuntimeError(str(_INITIALIZATION_ERROR))
+
+    print("🚀 Starting Medical Chatbot initialization...")
+    last_error = None
+
+    for attempt in range(1, max_retries + 1):
+        try:
+            _EMBEDDING_FUNCTION = get_embedding_function()
+            _VECTORSTORE = load_or_create_vectorstore(_EMBEDDING_FUNCTION)
+            _LLM = get_llm()
+            _RAG_CHAIN = create_rag_chain(_LLM, _VECTORSTORE)
+            print("✅ Medical Chatbot initialization complete!")
+            _INITIALIZATION_ERROR = None
+            return
+        except Exception as exc:
+            last_error = exc
+            print(f"⚠️ Initialization attempt {attempt}/{max_retries} failed: {exc}")
+
+    _INITIALIZATION_ERROR = RuntimeError(
+        f"Medical Chatbot initialization failed after {max_retries} attempts: {last_error}"
+    )
+    raise _INITIALIZATION_ERROR
 
 
 # ============================================================
@@ -411,11 +518,13 @@ async def on_chat_start():
     await cl.Message(content="🏥 Initializing Medical Chatbot... Please wait.").send()
     
     try:
-        # Use pre-initialized global objects (no file locking issues)
+        # Initialize shared components lazily with retry support
+        initialize_components()
+
         # Initialize chat history for this session
         chat_history = []
-        
-        # Create retriever from global vectorstore
+
+        # Create retriever from shared vectorstore
         retriever = _VECTORSTORE.as_retriever(search_kwargs={"k": 2})
         
         # Store in session
@@ -473,8 +582,9 @@ async def on_message(message: cl.Message):
         ).send()
         return
     
-    # Check for emergency symptoms first
-    if check_for_emergency(user_input):
+    # Deterministic risk triage (hard-stop + scoring)
+    risk_level = assess_risk_level(user_input)
+    if risk_level == "EMERGENCY":
         await cl.Message(content=get_emergency_response()).send()
         return
     
@@ -527,14 +637,14 @@ User: {user_input}"""
 You are continuing a conversation with a user about their symptoms.
 You use the conversation history to narrow down the possibilities.
 
-If you have enough info from the user's answers, you state specificially: "Based on your symptoms and answers, the most likely disease is..." and explain why it fits the available data better than other possibilities.
+If you have enough information from the user's answers, you may say: "Based on your symptoms and answers, the most likely condition is..." and explain why it fits better than alternatives.
 
 CRITICAL INSTRUCTIONS:
-- Do NOT use phrases like "I think", "I guess", "probably", or "maybe". Be authoritative based on the data.
-- Do NOT ask for feedback (e.g., "Does this sound right?") after providing the diagnosis.
-- Do NOT say "This is just a guess".
+- Use medically cautious, uncertainty-aware language when evidence is limited.
+- If confidence is limited, state this clearly and suggest the safest next steps.
+- Do NOT ask for feedback (e.g., "Does this sound right?") after giving your assessment.
 
-If you still need more info to be sure, you ask 1-2 more specific questions.
+If you still need more information to be sure, ask 1-2 focused follow-up questions.
 
 {f"Conversation so far:{chr(10)}{history_text}" if history_text else ""}
 
@@ -562,7 +672,14 @@ User: {user_input}"""
         # 8. Simple code guardrails for language
         answer = answer.replace("the patient", "you").replace("The patient", "You")
         sources_text = format_sources(docs)
-        full_response = answer + sources_text
+        urgent_prefix = ""
+        if risk_level == "URGENT":
+            urgent_prefix = (
+                "⚠️ **URGENT ADVICE REQUIRED:** "
+                "Your symptoms may need same-day medical evaluation.\n\n"
+            )
+
+        full_response = urgent_prefix + answer + sources_text
         full_response += "\n\n---\n*⚕️ This is a preliminary educational assessment only. Please consult a healthcare professional for proper diagnosis and treatment.*"
         
         # 10. Update message
