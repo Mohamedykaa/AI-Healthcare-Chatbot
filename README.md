@@ -75,6 +75,26 @@ pytest tests/
 python scripts/test_rag_chain.py
 ```
 
+## Project Integrity Check
+
+Run the full validation suite:
+
+```bash
+python scripts/check_project_integrity.py
+```
+
+For CI/release gates (strict dependency enforcement):
+
+```bash
+python scripts/check_project_integrity.py --strict-imports
+```
+
+This verifies:
+- Python version compatibility
+- Required files presence
+- Core dependency imports
+- Full unit test suite execution
+
 ---
 
 ## 📂 Archived Architecture (Reference Only)
