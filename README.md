@@ -91,9 +91,7 @@ This verifies:
 
 ---
 
-## 📂 Archived Architecture (Reference Only)
 
-The original production-grade microservices design is preserved in `/archive`:
 
 - **Gateway**: Nginx + ModSecurity WAF + OWASP CRS (SSL/TLS)
 - **Frontend**: Streamlit (Polling Architecture)
@@ -109,11 +107,11 @@ Security features from the archived version:
 - **Compliance**: PII Scrubbing & Encrypted DB Connections
 - **Supply Chain**: Automated Trivy vulnerability scanning
 
-```bash
-# (Archived) Docker deployment
-cd archive
-docker-compose up --build -d
-```
+## Architectural Evolution
+
+Earlier microservices-based iterations of this project 
+(FastAPI, Docker, etc.) are preserved locally for reference 
+but are not included in this repository to keep it lightweight.
 
 ---
 
