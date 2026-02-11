@@ -376,25 +376,49 @@ def format_sources(context_documents: List[Document]) -> str:
 
 
 # ============================================================
-# GLOBAL INITIALIZATION (Module Level)
-# Runs ONCE when the server starts, preventing concurrent access issues
+# ROBUST STARTUP INITIALIZATION (lazy + retry + cached failure)
 # ============================================================
 
-print("🚀 Starting Medical Chatbot initialization...")
+_EMBEDDING_FUNCTION = None
+_VECTORSTORE = None
+_LLM = None
+_RAG_CHAIN = None
+_INITIALIZATION_ERROR = None
 
-# Initialize shared embeddings
-_EMBEDDING_FUNCTION = get_embedding_function()
 
-# Initialize shared vectorstore (created/loaded once)
-_VECTORSTORE = load_or_create_vectorstore(_EMBEDDING_FUNCTION)
+def initialize_components(max_retries: int = 2) -> None:
+    """Initialize shared components once with bounded retries.
 
-# Initialize shared LLM
-_LLM = get_llm()
+    Raises RuntimeError if initialization fails after retries.
+    """
+    global _EMBEDDING_FUNCTION, _VECTORSTORE, _LLM, _RAG_CHAIN, _INITIALIZATION_ERROR
 
-# Create shared RAG chain
-_RAG_CHAIN = create_rag_chain(_LLM, _VECTORSTORE)
+    if _RAG_CHAIN is not None and _VECTORSTORE is not None and _LLM is not None:
+        return
 
-print("✅ Medical Chatbot initialization complete!")
+    if _INITIALIZATION_ERROR is not None:
+        raise RuntimeError(str(_INITIALIZATION_ERROR))
+
+    print("🚀 Starting Medical Chatbot initialization...")
+    last_error = None
+
+    for attempt in range(1, max_retries + 1):
+        try:
+            _EMBEDDING_FUNCTION = get_embedding_function()
+            _VECTORSTORE = load_or_create_vectorstore(_EMBEDDING_FUNCTION)
+            _LLM = get_llm()
+            _RAG_CHAIN = create_rag_chain(_LLM, _VECTORSTORE)
+            print("✅ Medical Chatbot initialization complete!")
+            _INITIALIZATION_ERROR = None
+            return
+        except Exception as exc:
+            last_error = exc
+            print(f"⚠️ Initialization attempt {attempt}/{max_retries} failed: {exc}")
+
+    _INITIALIZATION_ERROR = RuntimeError(
+        f"Medical Chatbot initialization failed after {max_retries} attempts: {last_error}"
+    )
+    raise _INITIALIZATION_ERROR
 
 
 # ============================================================
@@ -411,11 +435,13 @@ async def on_chat_start():
     await cl.Message(content="🏥 Initializing Medical Chatbot... Please wait.").send()
     
     try:
-        # Use pre-initialized global objects (no file locking issues)
+        # Initialize shared components lazily with retry support
+        initialize_components()
+
         # Initialize chat history for this session
         chat_history = []
-        
-        # Create retriever from global vectorstore
+
+        # Create retriever from shared vectorstore
         retriever = _VECTORSTORE.as_retriever(search_kwargs={"k": 2})
         
         # Store in session
@@ -527,14 +553,16 @@ User: {user_input}"""
 You are continuing a conversation with a user about their symptoms.
 You use the conversation history to narrow down the possibilities.
 
-If you have enough info from the user's answers, you state specificially: "Based on your symptoms and answers, the most likely disease is..." and explain why it fits the available data better than other possibilities.
+If you have enough information from the user's answers, you may say: "Based on your symptoms and answers, the most likely condition is..." and explain why it fits better than alternatives.
 
 CRITICAL INSTRUCTIONS:
-- Provide a confident analysis based on the data, but acknowledge if information is insufficient.
-- Avoid vague hedging like "I guess" or "maybe", but use precise language like "This pattern is consistent with..." or "Based on your description..."
+- Use medically cautious, uncertainty-aware language when evidence is limited.
+- Avoid vague hedging like "I guess" or "maybe", but use precise language like "This pattern is consistent with..."
+- If confidence is limited, state this clearly and suggest the safest next steps.
+- Do NOT ask for feedback (e.g., "Does this sound right?") after giving your assessment.
 - Do NOT say "This is just a guess".
 
-If you still need more info to be sure, you ask 1-2 more specific questions.
+If you still need more information to be sure, ask 1-2 focused follow-up questions.
 
 {f"Conversation so far:{chr(10)}{history_text}" if history_text else ""}
 
