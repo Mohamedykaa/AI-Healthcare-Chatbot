@@ -1,0 +1,32 @@
+# Requirements for Local Medical Chatbot (Chainlit + LangChain v0.1+)
+# ===================================================================
+# All LangChain packages use compatible versions from the 0.1.x series
+
+# Core LangChain packages (mutually compatible versions)
+langchain==0.1.20
+langchain-core==0.1.52
+langchain-community==0.0.38
+
+# Chainlit for the chat interface
+chainlit==1.0.505
+
+# Vector store
+chromadb==0.4.24
+
+# Embeddings
+sentence-transformers==2.5.1
+huggingface-hub==0.21.4
+
+# Ollama integration (included in langchain-community, but explicit for clarity)
+# Note: Requires Ollama to be installed and running locally
+# Install Ollama from: https://ollama.ai/
+# Pull model: ollama pull biomistral
+
+# Additional dependencies
+tiktoken==0.6.0
+pydantic>=2.0.0,<3.0.0
+numpy>=1.24.0,<2.0.0
+
+# Async support
+aiohttp>=3.9.0
+asyncio-throttle>=1.0.2

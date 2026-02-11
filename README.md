@@ -1,123 +1,110 @@
-# 🧠 AI Healthcare Chatbot
+# 🏥 AI Healthcare Chatbot
 
-An intelligent healthcare assistant that provides preliminary symptom analysis, condition suggestions, and general medical guidance using Natural Language Processing (NLP) and Machine Learning.  
-The chatbot integrates a user-friendly **Streamlit interface** for smooth interaction and features a modular knowledge base for scalability and continuous improvement.
-
----
-
-## 📋 Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Model Training](#model-training)
-- [Testing](#testing)
-- [Future Improvements](#future-improvements)
-- [Credits](#credits)
+> **📌 Project Note — Architecture Evolution**
+>
+> This project has undergone an architectural evolution. The original
+> microservices stack (FastAPI, Celery, Redis, Nginx WAF, Docker Compose)
+> has been **archived** in the `/archive` directory for reference.
+>
+> The **active, production-ready implementation** is a self-contained
+> **Chainlit-based RAG chatbot** powered by LLaMA 3 (via Ollama),
+> HuggingFace embeddings, and ChromaDB. All instructions below apply
+> to this active version.
 
 ---
 
-## 🩺 Overview
+## 🏗️ Active Architecture
 
-This project aims to assist users in identifying possible medical conditions based on described symptoms.  
-It combines **NLP preprocessing**, a **symptom-disease matching system**, and a **Streamlit-based interface** for real-time diagnosis support.  
-The goal is not to replace doctors, but to help users gain quick insights before professional consultation.
+| Layer | Technology |
+|-------|------------|
+| **Chat Interface** | Chainlit |
+| **LLM** | LLaMA 3 8B (ChatOllama, local) |
+| **Embeddings** | all-MiniLM-L6-v2 (HuggingFace, CPU) |
+| **Vector Store** | ChromaDB (persistent, local) |
+| **RAG Framework** | LangChain (retrieval + generation) |
+| **Data Sources** | MedQuad, MedMCQA, Medical Meadow WikiDoc |
 
----
-
-## ⚙️ Features
-
-- 🔍 **Symptom-Based Diagnosis:** Suggests possible conditions based on user inputs.  
-- 💬 **Interactive Chatbot:** Understands natural language queries in both English and Arabic.  
-- 🧠 **Knowledge Base Integration:** Medical data is stored in a JSON structure for easy updating.  
-- 🧾 **Multi-Symptom Logic:** Handles multiple concurrent symptoms for accurate analysis.  
-- 🌐 **Streamlit UI:** Simple, responsive, and clean interface for end-users.  
-- 🧰 **Modular Design:** Easily expandable and maintainable project structure.
-
----
-
-## 🗂️ Project Structure
-
-| Folder / File | Description |
-|----------------|-------------|
-| `app_streamlit.py` | Streamlit application that runs the chatbot UI. |
-| `src/` | Contains core logic for symptom analysis and chatbot functions. |
-| `models/` | Machine learning models and training artifacts. |
-| `data/` | Medical datasets and JSON-based knowledge base. |
-| `scripts/` | Helper scripts for data cleaning, preprocessing, and setup. |
-| `tests/` | Unit tests and validation scripts. |
-| `requirements.txt` | Dependencies required for running the project. |
-| `README.md` | Project documentation (this file). |
+**Key features:**
+- Retrieval-Augmented Generation for grounded medical Q&A
+- Emergency symptom detection with immediate escalation
+- Safety-filtered knowledge base (no dosage/prescription content)
+- Multi-turn conversation with history-aware context
+- Source citation on every response
 
 ---
 
-## 💻 Installation
+## 🚀 Quick Start
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Mohamedykaa/AI-Healthcare-Chatbot.git
-   cd AI-Healthcare-Chatbot
-Create a virtual environment (recommended):
+### Prerequisites
+- Python 3.10+
+- [Ollama](https://ollama.ai/) installed and running
+- LLaMA 3 model pulled: `ollama pull llama3:8b`
 
+### Install & Run
+```bash
+# 1. Install dependencies
+pip install -r requirements_chainlit.txt
 
-python -m venv venv
-source venv/bin/activate   # On Linux/Mac
-venv\Scripts\activate      # On Windows
-Install dependencies:
+# 2. Ingest medical data (first time only)
+python scripts/ingest_data.py
 
+# 3. Start the chatbot
+chainlit run app.py
+```
 
-pip install -r requirements.txt
-🚀 Usage
-Run the chatbot interface:
+The chatbot will be available at `http://localhost:8000`.
 
+---
 
-streamlit run app_streamlit.py
-Interact with the bot:
+## 🛡️ Safety Features
 
-Type your symptoms (e.g., "I have a headache and sore throat").
+- **Emergency detection** — Escalates chest pain, seizures, suicidal ideation, etc.
+- **Content filtering** — Ingestion pipeline strips dosage, prescription, and treatment data
+- **Echo guardrails** — Detects and handles LLM echo/empty responses
+- **Medical disclaimers** — Appended to every response automatically
 
-The system will analyze and provide possible conditions.
+---
 
-You can also ask general health-related questions.
+## 🧪 Testing
 
-🧠 Model Training
-The machine learning component is responsible for predicting conditions based on symptom combinations.
-To retrain the model:
-
-
-python src/train_model.py
-Make sure the dataset files are properly located inside the data/ folder.
-
-🧪 Testing
-To run all available tests:
-
-
+```bash
+# Run unit tests (no LLM or ChromaDB required)
 pytest tests/
-Tests cover:
 
-Knowledge base integrity
+# Manual RAG chain verification (requires Ollama)
+python scripts/test_rag_chain.py
+```
 
-Model prediction accuracy
+---
 
-Streamlit app behavior (basic functional checks)
+## 📂 Archived Architecture (Reference Only)
 
-🚧 Future Improvements
-🧬 Integration with live medical APIs for real-time data.
+The original production-grade microservices design is preserved in `/archive`:
 
-🗣️ Advanced NLP model (e.g., fine-tuned transformer) for deeper conversation understanding.
+- **Gateway**: Nginx + ModSecurity WAF + OWASP CRS (SSL/TLS)
+- **Frontend**: Streamlit (Polling Architecture)
+- **Backend**: FastAPI (Async Task Queue)
+- **Worker**: Celery + Redis (Offloaded Inference)
+- **AI Core**: BioMistral (LLM) + TensorFlow (Vision)
+- **Observability**: OpenTelemetry + Jaeger + Prometheus
 
-💾 User history tracking and analytics dashboard.
+Security features from the archived version:
+- **WAF**: Blocks SQL Injection, XSS (ModSecurity)
+- **Semantic Firewall**: Blocks Prompt Injection attacks
+- **Rate Limiting**: 20 req/min throttling (SlowAPI)
+- **Compliance**: PII Scrubbing & Encrypted DB Connections
+- **Supply Chain**: Automated Trivy vulnerability scanning
 
-🌍 Multilingual support expansion.
+```bash
+# (Archived) Docker deployment
+cd archive
+docker-compose up --build -d
+```
 
-🤖 Integration with voice input/output.
+---
 
-👨‍💻 Credits
-Developed by Mohamed Yaser
-AI & Machine Learning Enthusiast | 2025
+## 👨‍💻 Credits
+
+Developed by Mohamed Yaser | 2026
 
 ⭐ If you found this project useful, consider giving it a star on GitHub!
-
-

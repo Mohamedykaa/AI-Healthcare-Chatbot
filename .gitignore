@@ -48,7 +48,7 @@ __pycache__/
 
 # VS Code temporary runner files
 *tempCodeRunnerFile*
-*.bat
+
 
 # Pytest cache
 # Automatically generated during testing
@@ -56,4 +56,28 @@ __pycache__/
 
 # User-specific temporary/scratch files
 short_structure.txt
-file.py
+file.py!scripts/run_all.bat
+
+# ChromaDB vector store (generated at runtime)
+chroma_db/
+
+# Chainlit session data
+.chainlit/
+
+# Skin image datasets (too large for Git)
+data/skin_images/
+
+# GPU virtual environment
+venv_gpu/
+
+# Log directory
+logs/
+
+# OS files
+Thumbs.db
+
+# Files directory
+.files/
+
+# Archive (legacy code, too large for GitHub)
+archive/
