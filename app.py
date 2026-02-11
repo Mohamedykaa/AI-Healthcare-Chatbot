@@ -557,8 +557,10 @@ If you have enough information from the user's answers, you may say: "Based on y
 
 CRITICAL INSTRUCTIONS:
 - Use medically cautious, uncertainty-aware language when evidence is limited.
+- Avoid vague hedging like "I guess" or "maybe", but use precise language like "This pattern is consistent with..."
 - If confidence is limited, state this clearly and suggest the safest next steps.
 - Do NOT ask for feedback (e.g., "Does this sound right?") after giving your assessment.
+- Do NOT say "This is just a guess".
 
 If you still need more information to be sure, ask 1-2 focused follow-up questions.
 
