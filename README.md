@@ -82,6 +82,10 @@ Run the full validation suite:
 
 ```bash
 python scripts/check_project_integrity.py
+
+# For CI/CD (fails on warnings/missing optional deps):
+python scripts/check_project_integrity.py --strict
+
 ```
 
 This verifies:

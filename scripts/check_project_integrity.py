@@ -56,11 +56,10 @@ def check_required_files() -> bool:
     return all_found
 
 
-def check_imports() -> bool:
+def check_imports(strict: bool = False) -> bool:
     """Verify that core runtime/test dependencies are importable.
 
-    Missing imports are reported as warnings because this script may run in
-    lightweight CI/dev environments where only test dependencies are installed.
+    Missing imports are reported as warnings by default, but as failures in strict mode.
     """
     _print_header("Dependency Imports")
     modules = [
@@ -70,6 +69,7 @@ def check_imports() -> bool:
         "chromadb",
         "numpy",
         "pytest",
+        "dotenv",  # python-dotenv
     ]
 
     missing = []
@@ -78,9 +78,13 @@ def check_imports() -> bool:
             print(f"PASS: import {module}")
         else:
             missing.append(module)
-            print(f"WARN: cannot import {module}")
+            level = "FAIL" if strict else "WARN"
+            print(f"{level}: cannot import {module}")
 
     if missing:
+        if strict:
+            print("FAIL: Missing runtime dependencies in strict mode.")
+            return False
         print("WARN: Some runtime packages are not installed in this environment.")
         print("      Install requirements_chainlit.txt for full runtime validation.")
 
@@ -110,16 +114,31 @@ def check_pytest_suite() -> bool:
 
 
 def main() -> None:
+    strict_mode = "--strict" in sys.argv
+    if strict_mode:
+        _print_header("STRICT MODE ENABLED")
+
+    # In strict mode, any check failure (even warnings) causes exit 1
     checks = [
-        check_python_environment(),
-        check_required_files(),
-        check_imports(),
-        check_pytest_suite(),
+        ("python", check_python_environment()),
+        ("files", check_required_files()),
+        ("imports", check_imports(strict=strict_mode)),
+        ("pytest", check_pytest_suite()),
     ]
 
-    if not all(checks):
+    failed = [name for name, ok in checks if not ok]
+
+    if failed:
         _print_header("Summary")
-        print(f"Integrity check completed with failures.")
+        print(f"Integrity check completed with failures in: {', '.join(failed)}")
+        if strict_mode:
+            sys.exit(1)
+        # In non-strict mode, only critical failures (like pytest) normally exit 1,
+        # but here we follow the logic: if pytest failed, we definitely want to exit 1.
+        # check_pytest_suite returns False on failure.
+        # check_imports returns True (with warning) in loose mode, False in strict.
+        
+        # If any check explicitly failed (returned False), we exit 1 for safety.
         sys.exit(1)
 
     print("\n=== Summary ===")
