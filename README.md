@@ -95,7 +95,6 @@ This verifies:
 - Core dependency imports
 - Full unit test suite execution
 
-
 ## Clinical Calibration Notes
 
 The deterministic triage layer is intentionally calibrated to reduce false-positive emergency escalation while preserving safety:

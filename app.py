@@ -24,23 +24,12 @@ load_dotenv()
 # Chainlit imports
 import chainlit as cl
 
-# LangChain core imports
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
-from langchain.schema.runnable.config import RunnableConfig
-from langchain_core.documents import Document
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
-
-# LangChain community imports
+# LangChain imports
+from langchain_core.messages import HumanMessage, AIMessage
 from langchain_community.chat_models import ChatOllama
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_community.document_loaders import TextLoader
-
-# LangChain chain imports
-from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain.chains.retrieval import create_retrieval_chain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 
@@ -91,27 +80,6 @@ EMERGENCY_SCORE_THRESHOLD = 6
 URGENT_SCORE_THRESHOLD = 3
 
 
-# ============================================================
-# SYSTEM PROMPT WITH SAFETY CONSTRAINTS
-# ============================================================
-
-SYSTEM_PROMPT = """You are a medical decision-support assistant designed to demonstrate
-an interactive preliminary medical assessment for educational purposes.
-"""
-
-USER_INSTRUCTIONS = """
-Analysis Instructions:
-1. Provide a brief analysis of the symptoms using the retrieved context. (2-3 sentences)
-2. Ask 2-3 filtering questions to clarify the situation.
-3. State clearly: "Based on general medical principles (limited context available)..." if context is weak.
-4. End with a standard medical disclaimer.
-
-Context:
-{context}
-
-User Question:
-{input}
-"""
 
 
 # ============================================================
@@ -277,52 +245,6 @@ def get_llm() -> ChatOllama:
         )
 
 
-# ============================================================
-# RAG CHAIN CONSTRUCTION
-# ============================================================
-
-from langchain.chains import create_history_aware_retriever
-
-def create_rag_chain(llm: ChatOllama, vectorstore: Chroma):
-    """
-    Create the RAG chain with history-aware retrieval.
-    """
-    # 1. Create Retriever
-    retriever = vectorstore.as_retriever(
-        search_type="similarity",
-        search_kwargs={"k": 2}
-    )
-    
-    # 2. History-Aware Retriever Logic
-    # Reformulates the user's question based on history if needed
-    contextualize_q_system_prompt = """Given a chat history and the latest user question
-    which might reference context in the chat history, formulate a standalone question
-    which can be understood without the chat history. Do NOT answer the question,
-    just reformulate it if needed and otherwise return it as is."""
-    
-    contextualize_q_prompt = ChatPromptTemplate.from_messages([
-        ("system", contextualize_q_system_prompt),
-        MessagesPlaceholder("chat_history"),
-        ("human", "{input}"),
-    ])
-    
-    history_aware_retriever = create_history_aware_retriever(
-        llm, retriever, contextualize_q_prompt
-    )
-    
-    # 3. Answer Generation Logic
-    qa_prompt = ChatPromptTemplate.from_messages([
-        ("system", SYSTEM_PROMPT),
-        MessagesPlaceholder("chat_history"),
-        ("human", USER_INSTRUCTIONS),
-    ])
-    
-    question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
-    
-    # 4. Final RAG Chain combining both
-    rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
-    
-    return rag_chain
 
 
 # ============================================================
@@ -437,7 +359,7 @@ If you're with someone experiencing these symptoms:
 # SOURCE CITATION
 # ============================================================
 
-def format_sources(context_documents: List[Document]) -> str:
+def format_sources(context_documents: list) -> str:
     """
     Format source documents as a clean list of references (titles/filenames only).
     Does NOT dump raw content.
@@ -465,7 +387,6 @@ def format_sources(context_documents: List[Document]) -> str:
 _EMBEDDING_FUNCTION = None
 _VECTORSTORE = None
 _LLM = None
-_RAG_CHAIN = None
 _INITIALIZATION_ERROR = None
 
 
@@ -474,9 +395,9 @@ def initialize_components(max_retries: int = 2) -> None:
 
     Raises RuntimeError if initialization fails after retries.
     """
-    global _EMBEDDING_FUNCTION, _VECTORSTORE, _LLM, _RAG_CHAIN, _INITIALIZATION_ERROR
+    global _EMBEDDING_FUNCTION, _VECTORSTORE, _LLM, _INITIALIZATION_ERROR
 
-    if _RAG_CHAIN is not None and _VECTORSTORE is not None and _LLM is not None:
+    if _VECTORSTORE is not None and _LLM is not None:
         return
 
     if _INITIALIZATION_ERROR is not None:
@@ -490,7 +411,6 @@ def initialize_components(max_retries: int = 2) -> None:
             _EMBEDDING_FUNCTION = get_embedding_function()
             _VECTORSTORE = load_or_create_vectorstore(_EMBEDDING_FUNCTION)
             _LLM = get_llm()
-            _RAG_CHAIN = create_rag_chain(_LLM, _VECTORSTORE)
             print("✅ Medical Chatbot initialization complete!")
             _INITIALIZATION_ERROR = None
             return
@@ -528,7 +448,6 @@ async def on_chat_start():
         retriever = _VECTORSTORE.as_retriever(search_kwargs={"k": 2})
         
         # Store in session
-        cl.user_session.set("rag_chain", _RAG_CHAIN)
         cl.user_session.set("retriever", retriever)
         cl.user_session.set("llm", _LLM)
         cl.user_session.set("chat_history", chat_history)
@@ -573,10 +492,9 @@ async def on_message(message: cl.Message):
     user_input = message.content
     
     # Get session data
-    rag_chain = cl.user_session.get("rag_chain")
     chat_history = cl.user_session.get("chat_history")
     
-    if rag_chain is None:
+    if chat_history is None:
         await cl.Message(
             content="⚠️ Session not initialized. Please refresh the page."
         ).send()
@@ -641,8 +559,10 @@ If you have enough information from the user's answers, you may say: "Based on y
 
 CRITICAL INSTRUCTIONS:
 - Use medically cautious, uncertainty-aware language when evidence is limited.
+- Avoid vague hedging like "I guess" or "maybe", but use precise language like "This pattern is consistent with..."
 - If confidence is limited, state this clearly and suggest the safest next steps.
 - Do NOT ask for feedback (e.g., "Does this sound right?") after giving your assessment.
+- Do NOT say "This is just a guess".
 
 If you still need more information to be sure, ask 1-2 focused follow-up questions.
 
