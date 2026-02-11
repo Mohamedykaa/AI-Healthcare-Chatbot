@@ -95,6 +95,19 @@ This verifies:
 - Core dependency imports
 - Full unit test suite execution
 
+## Clinical Calibration Notes
+
+The deterministic triage layer is intentionally calibrated to reduce false-positive emergency escalation while preserving safety:
+
+- **Hard-stop critical signals** (e.g., suicidal intent, unconsciousness, stroke, heart attack, heatstroke/sunstroke) always return `EMERGENCY`, independent of score.
+- **Score thresholds** are set to:
+  - `EMERGENCY >= 6`
+  - `URGENT >= 3`
+  - otherwise `ROUTINE`
+- **Why `EMERGENCY >= 6`?** This avoids escalating a single severe symptom phrase (e.g., severe chest pain) to emergency without additional red flags or critical hard-stop terms.
+- **Why `URGENT >= 3`?** A core symptom can still trigger same-day caution (`URGENT`) without forcing immediate emergency messaging.
+- **Deterministic scope note:** The matcher uses boundary-aware phrase matching and phrase-level deduplication. It does not perform synonym/NLP concept normalization by design.
+
 ---
 
 ## 📂 Archived Architecture (Reference Only)
