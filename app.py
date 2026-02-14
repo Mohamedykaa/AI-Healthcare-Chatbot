@@ -12,417 +12,23 @@ Entry point: chainlit run app.py
 """
 
 import os
-import re
-import shutil
-from typing import List, Optional
 import asyncio
-
-# Load environment variables from .env (if present)
 from dotenv import load_dotenv
-load_dotenv()
-
-# Chainlit imports
 import chainlit as cl
-
-# LangChain imports
 from langchain_core.messages import HumanMessage, AIMessage
-from langchain_community.chat_models import ChatOllama
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Chroma
-from langchain_community.document_loaders import TextLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-
-# ============================================================
-# CONFIGURATION (loaded from .env with safe defaults)
-# ============================================================
-
-CHROMA_PERSIST_DIR = os.environ.get("CHROMA_PERSIST_DIR", "./chroma_db")
-MEDICAL_KNOWLEDGE_FILES = [
-    "data/medical_knowledge_medquad.txt",
-    "data/medical_knowledge_medmcqa.txt",
-    "data/medical_knowledge_public_health.txt",
-]
-EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
-LLM_MODEL = os.environ.get("LLM_MODEL", "llama3:8b")
-
-# Chunk settings for document splitting
-CHUNK_SIZE = int(os.environ.get("CHUNK_SIZE", "500"))
-CHUNK_OVERLAP = int(os.environ.get("CHUNK_OVERLAP", "50"))
-
-# Hard-stop emergency terms (always EMERGENCY regardless of score)
-CRITICAL_KEYWORDS = [
-    "heart attack", "stroke", "severe bleeding", "loss of consciousness",
-    "unconscious", "seizure", "severe head injury", "poisoning", "overdose",
-    "suicidal", "suicide", "self harm", "severe allergic reaction",
-    "anaphylaxis", "choking", "heatstroke", "sunstroke",
-]
-
-# Score-driven triage terms
-ASSOCIATED_RED_FLAGS = [
-    "shortness of breath", "cold sweating",
-]
-
-CORE_SYMPTOM_KEYWORDS = [
-    "chest pain", "cannot breathe", "cant breathe", "difficulty breathing",
-    "fainting",
-]
-
-SEVERE_MODIFIERS = [
-    "severe", "crushing", "worst", "sudden",
-]
-
-LOW_RISK_MODIFIERS = [
-    "mild", "localized", "only when pressing", "brief",
-]
-
-EMERGENCY_SCORE_THRESHOLD = 6
-URGENT_SCORE_THRESHOLD = 3
-
-
-
-
-# ============================================================
-# EMBEDDING FUNCTION (CPU-FORCED)
-# ============================================================
-
-def get_embedding_function() -> HuggingFaceEmbeddings:
-    """
-    Create HuggingFace embeddings with CPU-forced execution.
-    Uses the same embedding function for both creation and loading.
-    """
-    return HuggingFaceEmbeddings(
-        model_name=EMBEDDING_MODEL,
-        model_kwargs={"device": "cpu"},
-        encode_kwargs={"normalize_embeddings": True}
-    )
-
-
-# ============================================================
-# VECTOR STORE MANAGEMENT
-# ============================================================
-
-def validate_chroma_db(vectorstore: Chroma) -> bool:
-    """
-    Validate ChromaDB integrity by performing a test query.
-    Returns True if DB is valid and accessible.
-    """
-    try:
-        # Test similarity search with a generic query
-        results = vectorstore.similarity_search("health", k=1)
-        # Check collection has documents
-        collection = vectorstore._collection
-        count = collection.count()
-        return count > 0
-    except Exception as e:
-        print(f"ChromaDB validation failed: {e}")
-        return False
-
-
-def normalize_text(text: str) -> str:
-    """
-    Normalize text by stripping whitespace and cleaning newlines.
-    """
-    # Replace multiple newlines with single newline
-    text = re.sub(r'\n\s*\n', '\n\n', text)
-    # Strip leading/trailing whitespace
-    text = text.strip()
-    return text
-
-
-def load_or_create_vectorstore(embedding_function: HuggingFaceEmbeddings) -> Chroma:
-    """
-    Load existing ChromaDB or create new one from medical knowledge files.
-    
-    Logic:
-    1) If ./chroma_db exists -> Load and validate
-    2) If not exists -> Load all medical knowledge files, split, create DB
-    """
-    if os.path.exists(CHROMA_PERSIST_DIR):
-        print(f"📂 Found existing ChromaDB at {CHROMA_PERSIST_DIR}")
-        try:
-            vectorstore = Chroma(
-                persist_directory=CHROMA_PERSIST_DIR,
-                embedding_function=embedding_function
-            )
-            
-            if validate_chroma_db(vectorstore):
-                print("✅ ChromaDB loaded and validated successfully")
-                return vectorstore
-            else:
-                print("⚠️ ChromaDB validation failed, recreating...")
-                shutil.rmtree(CHROMA_PERSIST_DIR)
-        except Exception as e:
-            print(f"❌ Error loading ChromaDB: {e}")
-            if os.path.exists(CHROMA_PERSIST_DIR):
-                shutil.rmtree(CHROMA_PERSIST_DIR)
-    
-    # Load documents from all medical knowledge files
-    print("📄 Loading medical knowledge from multiple sources...")
-    all_documents = []
-    
-    for filepath in MEDICAL_KNOWLEDGE_FILES:
-        if os.path.exists(filepath):
-            print(f"   📥 Loading: {filepath}")
-            loader = TextLoader(filepath, encoding="utf-8")
-            docs = loader.load()
-            # Normalize text content
-            for doc in docs:
-                doc.page_content = normalize_text(doc.page_content)
-                doc.metadata["source"] = filepath
-            all_documents.extend(docs)
-        else:
-            print(f"   ⚠️ Not found (skip): {filepath}")
-    
-    if not all_documents:
-        raise FileNotFoundError(
-            "No medical knowledge files found. "
-            "Please run 'python ingest_data.py' first to generate the data files."
-        )
-    
-    print(f"   📊 Loaded {len(all_documents)} documents from {len(MEDICAL_KNOWLEDGE_FILES)} sources")
-    
-    # Split documents
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=CHUNK_SIZE,
-        chunk_overlap=CHUNK_OVERLAP,
-        length_function=len,
-        separators=["\n---\n", "\n\n", "\n", ". ", " ", ""]
-    )
-    splits = text_splitter.split_documents(all_documents)
-    
-    print(f"📊 Created {len(splits)} document chunks")
-    
-    # ChromaDB has max batch size of 5461, so we batch insert
-    BATCH_SIZE = 5000
-    
-    if len(splits) <= BATCH_SIZE:
-        # Small enough to insert at once
-        vectorstore = Chroma.from_documents(
-            documents=splits,
-            embedding=embedding_function,
-            persist_directory=CHROMA_PERSIST_DIR
-        )
-    else:
-        # Create empty vectorstore first
-        vectorstore = Chroma(
-            persist_directory=CHROMA_PERSIST_DIR,
-            embedding_function=embedding_function
-        )
-        
-        # Add documents in batches
-        for i in range(0, len(splits), BATCH_SIZE):
-            batch = splits[i:i + BATCH_SIZE]
-            print(f"   📥 Adding batch {i//BATCH_SIZE + 1}/{(len(splits) + BATCH_SIZE - 1)//BATCH_SIZE} ({len(batch)} docs)")
-            vectorstore.add_documents(batch)
-    
-    vectorstore.persist()
-    
-    print(f"✅ ChromaDB created and persisted at {CHROMA_PERSIST_DIR}")
-    return vectorstore
-
-
-# ============================================================
-# LLM INITIALIZATION
-# ============================================================
-
-def get_llm() -> ChatOllama:
-    """
-    Initialize ChatOllama with Llama 3 model.
-    Includes error handling for model loading issues.
-    """
-    try:
-        llm = ChatOllama(
-            model=LLM_MODEL,
-            temperature=0.3,  # Optimized for Llama 3 stability (0.2-0.4 range)
-            num_predict=2048,  # Sufficient for full triage response
-        )
-        return llm
-    except Exception as e:
-        raise RuntimeError(
-            f"Failed to initialize ChatOllama with model '{LLM_MODEL}'. "
-            f"Ensure Ollama is running and the model is pulled. Error: {e}"
-        )
-
-
-
-
-# ============================================================
-# EMERGENCY DETECTION
-# ============================================================
-
-def normalize_input(text: str) -> str:
-    """Normalize free-text input for deterministic phrase matching."""
-    lowered = text.lower().strip()
-    lowered = re.sub(r"[^\w\s]", " ", lowered)
-    return re.sub(r"\s+", " ", lowered)
-
-
-def contains_phrase(text: str, phrase: str) -> bool:
-    """Check for phrase with word boundaries to avoid partial-word matches."""
-    escaped = re.escape(phrase)
-    pattern = rf"\b{escaped}\b"
-    return re.search(pattern, text) is not None
-
-
-def _match_category_phrases(normalized_input: str, phrases: List[str], used_phrases: set[str]) -> set[str]:
-    """Return new matched phrases not previously counted in higher-priority categories.
-
-    If a phrase is matched in a higher-precedence category, it is skipped in lower categories.
-    """
-    matched: set[str] = set()
-    for phrase in phrases:
-        if phrase in used_phrases:
-            continue
-        if contains_phrase(normalized_input, phrase):
-            matched.add(phrase)
-    return matched
-
-
-def calculate_risk_score(user_input: str) -> int:
-    """Calculate deterministic risk score with phrase-level dedup and precedence."""
-    normalized = normalize_input(user_input)
-    used_phrases: set[str] = set()
-    score = 0
-
-    red_flag_matches = _match_category_phrases(normalized, ASSOCIATED_RED_FLAGS, used_phrases)
-    used_phrases.update(red_flag_matches)
-    score += 3 * len(red_flag_matches)
-
-    core_matches = _match_category_phrases(normalized, CORE_SYMPTOM_KEYWORDS, used_phrases)
-    used_phrases.update(core_matches)
-    score += 3 * len(core_matches)
-
-    severe_matches = _match_category_phrases(normalized, SEVERE_MODIFIERS, used_phrases)
-    used_phrases.update(severe_matches)
-    score += 2 * len(severe_matches)
-
-    low_risk_matches = _match_category_phrases(normalized, LOW_RISK_MODIFIERS, used_phrases)
-    used_phrases.update(low_risk_matches)
-    score -= 2 * len(low_risk_matches)
-
-    return score
-
-
-def assess_risk_level(user_input: str) -> str:
-    """Assess triage level with hard-stop safety checks and score thresholds."""
-    normalized = normalize_input(user_input)
-
-    # Highest-priority category: hard stops are always emergency.
-    for keyword in CRITICAL_KEYWORDS:
-        if contains_phrase(normalized, keyword):
-            return "EMERGENCY"
-
-    score = calculate_risk_score(user_input)
-    if score >= EMERGENCY_SCORE_THRESHOLD:
-        return "EMERGENCY"
-    if score >= URGENT_SCORE_THRESHOLD:
-        return "URGENT"
-    return "ROUTINE"
-
-
-def check_for_emergency(user_input: str) -> bool:
-    """Backwards-compatible helper used by existing flow/tests."""
-    return assess_risk_level(user_input) == "EMERGENCY"
-
-
-def get_emergency_response() -> str:
-    """
-    Return the emergency response message.
-    """
-    return """🚨 **EMERGENCY ALERT** 🚨
-
-Based on your description, this may be a medical emergency requiring immediate attention.
-
-**IMPORTANT:**
-- I cannot provide a diagnosis for emergency symptoms.
-- Please seek immediate medical help.
-
-**Recommended Actions:**
-1. **Call Emergency Services** (911, 999, or your local emergency number)
-2. **Go to the nearest Emergency Room** immediately
-3. **Do not delay** - time is critical in medical emergencies
-
-If you're with someone experiencing these symptoms:
-- Stay calm and keep them comfortable
-- Do not give them food or water unless instructed by medical personnel
-- Be ready to describe the symptoms to emergency responders
-
-**Remember:** I am an AI and cannot replace emergency medical care. Your safety is the priority.
-
----
-*This is an automated safety response. Please seek professional medical attention immediately.*
-"""
-
-
-# ============================================================
-# SOURCE CITATION
-# ============================================================
-
-def format_sources(context_documents: list) -> str:
-    """
-    Format source documents as a clean list of references (titles/filenames only).
-    Does NOT dump raw content.
-    """
-    if not context_documents:
-        return ""
-    
-    sources = set()
-    for doc in context_documents:
-        source = doc.metadata.get("source", "Medical Knowledge Base")
-        # Clean up source name (basename)
-        source_name = os.path.basename(source)
-        sources.add(source_name)
-    
-    if not sources:
-        return ""
-        
-    return "\n\n---\n**📚 References:** " + ", ".join(sorted(sources))
-
-
-# ============================================================
-# ROBUST STARTUP INITIALIZATION (lazy + retry + cached failure)
-# ============================================================
-
-_EMBEDDING_FUNCTION = None
-_VECTORSTORE = None
-_LLM = None
-_INITIALIZATION_ERROR = None
-
-
-def initialize_components(max_retries: int = 2) -> None:
-    """Initialize shared components once with bounded retries.
-
-    Raises RuntimeError if initialization fails after retries.
-    """
-    global _EMBEDDING_FUNCTION, _VECTORSTORE, _LLM, _INITIALIZATION_ERROR
-
-    if _VECTORSTORE is not None and _LLM is not None:
-        return
-
-    if _INITIALIZATION_ERROR is not None:
-        raise RuntimeError(str(_INITIALIZATION_ERROR))
-
-    print("🚀 Starting Medical Chatbot initialization...")
-    last_error = None
-
-    for attempt in range(1, max_retries + 1):
-        try:
-            _EMBEDDING_FUNCTION = get_embedding_function()
-            _VECTORSTORE = load_or_create_vectorstore(_EMBEDDING_FUNCTION)
-            _LLM = get_llm()
-            print("✅ Medical Chatbot initialization complete!")
-            _INITIALIZATION_ERROR = None
-            return
-        except Exception as exc:
-            last_error = exc
-            print(f"⚠️ Initialization attempt {attempt}/{max_retries} failed: {exc}")
-
-    _INITIALIZATION_ERROR = RuntimeError(
-        f"Medical Chatbot initialization failed after {max_retries} attempts: {last_error}"
-    )
-    raise _INITIALIZATION_ERROR
-
+# Import core logic
+from backend.core import (
+    initialize_components,
+    assess_risk_level,
+    get_emergency_response,
+    process_chat_message,
+    _VECTORSTORE,
+    _LLM
+)
+
+# Load environment variables
+load_dotenv()
 
 # ============================================================
 # CHAINLIT HANDLERS
@@ -433,23 +39,15 @@ async def on_chat_start():
     """
     Initialize the chat session with RAG chain.
     Called when a new user session starts.
-    Uses pre-initialized global vectorstore and RAG chain.
     """
     await cl.Message(content="🏥 Initializing Medical Chatbot... Please wait.").send()
     
     try:
-        # Initialize shared components lazily with retry support
+        # Initialize shared components lazily
         initialize_components()
 
         # Initialize chat history for this session
         chat_history = []
-
-        # Create retriever from shared vectorstore
-        retriever = _VECTORSTORE.as_retriever(search_kwargs={"k": 2})
-        
-        # Store in session
-        cl.user_session.set("retriever", retriever)
-        cl.user_session.set("llm", _LLM)
         cl.user_session.set("chat_history", chat_history)
         
         # Send welcome message
@@ -475,10 +73,6 @@ If you're experiencing a medical emergency, please call emergency services (911/
 """
         await cl.Message(content=welcome_message).send()
         
-    except FileNotFoundError as e:
-        await cl.Message(content=f"❌ **Setup Error:** {str(e)}").send()
-    except RuntimeError as e:
-        await cl.Message(content=f"❌ **LLM Error:** {str(e)}").send()
     except Exception as e:
         await cl.Message(content=f"❌ **Initialization Error:** {str(e)}").send()
 
@@ -500,115 +94,26 @@ async def on_message(message: cl.Message):
         ).send()
         return
     
-    # Deterministic risk triage (hard-stop + scoring)
-    risk_level = assess_risk_level(user_input)
-    if risk_level == "EMERGENCY":
-        await cl.Message(content=get_emergency_response()).send()
-        return
-    
     # Send thinking indicator
     msg = cl.Message(content="")
     await msg.send()
     
     try:
-        # 1. Get session objects
-        retriever = cl.user_session.get("retriever")
-        llm = cl.user_session.get("llm")
+        # Process message using core backend logic
+        response_text, risk_level, sources_text = await process_chat_message(user_input, chat_history)
         
-        if not retriever or not llm:
-            msg.content = "⚠️ Session not initialized. Please refresh the page."
-            await msg.update()
-            return
+        # Append disclaimer
+        full_response = response_text + sources_text
+        if risk_level != "EMERGENCY":
+            full_response += "\n\n---\n*⚕️ This is a preliminary educational assessment only. Please consult a healthcare professional for proper diagnosis and treatment.*"
         
-        # 2. Retrieve relevant medical context
-        docs = retriever.invoke(user_input)
-        context_text = "\n".join([doc.page_content[:200] for doc in docs[:2]])
-        
-        # 3. Format chat history (last 4 exchanges = 8 messages)
-        history_text = ""
-        if chat_history:
-            for msg_item in chat_history[-8:]:
-                if hasattr(msg_item, 'content'):
-                    role = "User" if isinstance(msg_item, HumanMessage) else "Assistant"
-                    history_text += f"{role}: {msg_item.content}\n"
-        
-        # 4. Determine conversation phase
-        turn_count = len(chat_history) // 2
-        
-        # 5. Build prompt as PERSONALITY DESCRIPTION (prevents 7B echo)
-        if turn_count == 0:
-            # First turn: describe symptoms and ask questions
-            prompt = f"""You are an educational medical symptom checker.
-You talk to users who describe how they feel.
-You respond by explaining symptoms in simple medical terms.
-
-You usually say what such symptoms are commonly related to, mention 2-3 possible conditions in a cautious way, and ask a few short questions to differentiate between them.
-
-You do NOT name a single disease yet.
-
-Medical context: {context_text[:250]}
-
-User: {user_input}"""
-        else:
-            # Follow-up turns: explicit diagnosis allowed
-            prompt = f"""You are an educational medical symptom checker.
-You are continuing a conversation with a user about their symptoms.
-You use the conversation history to narrow down the possibilities.
-
-If you have enough information from the user's answers, you may say: "Based on your symptoms and answers, the most likely condition is..." and explain why it fits better than alternatives.
-
-CRITICAL INSTRUCTIONS:
-- Use medically cautious, uncertainty-aware language when evidence is limited.
-- Avoid vague hedging like "I guess" or "maybe", but use precise language like "This pattern is consistent with..."
-- If confidence is limited, state this clearly and suggest the safest next steps.
-- Do NOT ask for feedback (e.g., "Does this sound right?") after giving your assessment.
-- Do NOT say "This is just a guess".
-
-If you still need more information to be sure, ask 1-2 focused follow-up questions.
-
-{f"Conversation so far:{chr(10)}{history_text}" if history_text else ""}
-
-User: {user_input}"""
-        
-        # 6. Call LLM
-        response = await llm.ainvoke(prompt)
-        answer = response.content if hasattr(response, 'content') else str(response)
-        
-        # 7. ECHO GUARDRAIL (Crucial for 7B models)
-        # If model just repeats the prompt or starts with "You are", uses fallback
-        if not answer or len(answer.strip()) < 10 or answer.strip().startswith("You are") or "You match symptoms" in answer:
-            answer = (
-                "I'm sorry you're not feeling well. "
-                "Based on general medical discussions, your symptoms are often related "
-                "to common upper respiratory conditions or viral infections.\n\n"
-                "To better understand your symptoms:\n"
-                "• How long have you had them?\n"
-                "• Is your fever mild or high?\n"
-                "• Do you have a cough or headache?\n\n"
-                "(Response generated via fallback safe-mode due to model load)"
-            )
-            print("DEBUG [X]: Echo/Empty detected - using safe fallback")
-        
-        # 8. Simple code guardrails for language
-        answer = answer.replace("the patient", "you").replace("The patient", "You")
-        sources_text = format_sources(docs)
-        urgent_prefix = ""
-        if risk_level == "URGENT":
-            urgent_prefix = (
-                "⚠️ **URGENT ADVICE REQUIRED:** "
-                "Your symptoms may need same-day medical evaluation.\n\n"
-            )
-
-        full_response = urgent_prefix + answer + sources_text
-        full_response += "\n\n---\n*⚕️ This is a preliminary educational assessment only. Please consult a healthcare professional for proper diagnosis and treatment.*"
-        
-        # 10. Update message
+        # Update message
         msg.content = full_response
         await msg.update()
         
-        # 11. Update chat history
+        # Update chat history
         chat_history.append(HumanMessage(content=user_input))
-        chat_history.append(AIMessage(content=answer))
+        chat_history.append(AIMessage(content=response_text))
         if len(chat_history) > 16:
             chat_history = chat_history[-16:]
         cl.user_session.set("chat_history", chat_history)
@@ -616,10 +121,6 @@ User: {user_input}"""
     except Exception as e:
         await cl.Message(content=f"❌ **Error:** {str(e)}\n\nPlease try again.").send()
 
-
-# ============================================================
-# MAIN
-# ============================================================
 
 if __name__ == "__main__":
     print("Run this application with: chainlit run app.py")

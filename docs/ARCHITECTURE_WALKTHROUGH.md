@@ -83,21 +83,20 @@ User Input → Chainlit on_message handler
 
 ### 1. Chainlit Application ([app.py](file:///d:/disease_prediction_project/app.py))
 
-The **single-file application** serving as both UI and backend:
+The **single-file application** serving as the chat UI; all RAG and risk logic lives in [backend/core.py](file:///d:/disease_prediction_project/backend/core.py).
 
 **Handlers:**
-- `on_chat_start()` — Session init: attaches vectorstore, RAG chain, LLM, and empty chat history to `cl.user_session`
-- `on_message()` — Per-message handler: emergency check → retrieval → LLM call → source formatting → response
+- `on_chat_start()` — Session init: initializes shared components (if needed) and sets empty chat history in `cl.user_session`
+- `on_message()` — Per-message handler: delegates to `backend.core.process_chat_message()` (emergency check → manual retrieval → LLM call → source formatting → response)
 
-**Key Functions:**
+**Key logic (in [backend/core.py](file:///d:/disease_prediction_project/backend/core.py)):**
 - `get_embedding_function()` — CPU-forced HuggingFace embeddings (all-MiniLM-L6-v2)
 - `load_or_create_vectorstore()` — Loads ChromaDB from `./chroma_db` or creates from `data/medical_knowledge_*.txt`
 - `validate_chroma_db()` — Integrity test query on startup
 - `normalize_text()` — Whitespace / newline cleaning
 - `get_llm()` — Initialises `ChatOllama` with Llama 3 8B
-- `create_rag_chain()` — Builds a history-aware retrieval chain (retained for future use; see *RAG Chain vs. Manual Retrieval* below)
-- `check_for_emergency()` / `get_emergency_response()` — Keyword-based emergency detection
-- `format_sources()` — Formats retrieved documents as clean citation list
+- **Manual retrieval only** — No RAG chain is built at runtime; the retriever is invoked directly and a custom prompt is built. A LangChain history-aware retrieval chain is **reserved for future use** if moving to a larger/cloud model (see *RAG Chain vs. Manual Retrieval* below).
+- Emergency detection and response — Implemented in [backend/risk.py](file:///d:/disease_prediction_project/backend/risk.py) (pure, dependency-free); `format_sources()` in core formats retrieved documents as citations.
 
 ### 2. Data Ingestion Script ([scripts/ingest_data.py](file:///d:/disease_prediction_project/scripts/ingest_data.py))
 
@@ -130,10 +129,7 @@ The UI is provided by the **Chainlit** framework — no separate frontend proces
 - Welcome message with usage guidance (configured in `chainlit.md`)
 
 **Session State (per user):**
-- `vectorstore` — ChromaDB instance
-- `rag_chain` — Pre-built retrieval chain
-- `llm` — ChatOllama instance
-- `chat_history` — List of `HumanMessage` / `AIMessage` objects
+- `chat_history` — List of `HumanMessage` / `AIMessage` objects (vectorstore and LLM are process-wide singletons in `backend.core`, not stored per session)
 
 ---
 
@@ -174,10 +170,10 @@ All of the above now reside under `archive/` and are **not used** by the active 
 
 ## LLM Integration
 
-### ChatOllama — Llama 3 8B (configured in [app.py](file:///d:/disease_prediction_project/app.py))
+### ChatOllama — Llama 3 8B (configured in [backend/core.py](file:///d:/disease_prediction_project/backend/core.py))
 
 - Served locally via **Ollama** (`ChatOllama` LangChain wrapper)
-- Model: `llama3:8b` (configurable via `OLLAMA_MODEL` env var)
+- Model: `llama3:8b` (configurable via `LLM_MODEL` env var)
 - Temperature: `0.3` (conservative for medical context)
 - Embeddings: `all-MiniLM-L6-v2` via HuggingFace, forced to CPU
 
@@ -203,36 +199,24 @@ Run with: `pytest tests/`
 
 | Setting | Location | Purpose |
 |---------|----------|---------|
-| `CHROMA_PERSIST_DIR` | app.py / `.env` | ChromaDB storage path (default `./chroma_db`) |
-| `OLLAMA_MODEL` | app.py / `.env` | LLM model name (default `llama3:8b`) |
-| `OLLAMA_BASE_URL` | app.py / `.env` | Ollama server URL (default `http://localhost:11434`) |
-| `LLM_TEMPERATURE` | app.py / `.env` | LLM sampling temperature (default `0.3`) |
-| `RETRIEVER_K` | app.py | Number of documents to retrieve (default `6`) |
-| `RETRIEVER_SCORE_THRESHOLD` | app.py | Minimum similarity score (default `0.3`) |
+| `CHROMA_PERSIST_DIR` | backend/core.py / `.env` | ChromaDB storage path (default `./chroma_db`) |
+| `LLM_MODEL` | backend/core.py / `.env` | LLM model name (default `llama3:8b`) |
+| `LLM_TEMPERATURE` | backend/core.py (hardcoded) | LLM sampling temperature (0.3) |
+| Retriever `k` / `score_threshold` | backend/core.py | Number of documents and minimum similarity (see code) |
 
 ---
 
-## Note: RAG Chain vs. Manual Retrieval in `app.py`
+## Note: RAG Chain vs. Manual Retrieval
 
-The active `app.py` constructs a **history-aware RAG chain** using
-`create_history_aware_retriever` and `create_retrieval_chain` (LangChain).
-However, at runtime the `on_message` handler does **not** invoke this chain.
-Instead it performs **manual retrieval** (calling the retriever directly) and
-builds a custom prompt string that is passed to `llm.ainvoke()`.
-
-**Why both exist:**
+The active codebase uses **manual retrieval only**: [backend/core.py](file:///d:/disease_prediction_project/backend/core.py) calls the vectorstore retriever directly and builds a custom prompt for each message. No LangChain `create_history_aware_retriever` or `create_retrieval_chain` is built or invoked at runtime.
 
 | Aspect | History-Aware RAG Chain | Manual Retrieval (active) |
 |--------|------------------------|---------------------------|
-| **Purpose** | Intended production path | Stability fallback |
-| **Status** | Built at startup, stored in session | Used for every user message |
-| **Reason** | Correct LangChain pattern | Gives full control over prompt formatting, echo-guardrails, and turn-phase logic needed to keep LLaMA 3 8B stable on local hardware |
+| **Purpose** | Future use (e.g. larger or cloud-hosted model) | Current implementation |
+| **Status** | Not present in codebase | Used for every user message in `process_chat_message()` |
+| **Reason** | — | Full control over prompt formatting, echo-guardrails, and turn-phase logic for LLaMA 3 8B on local hardware |
 
-This was a **conscious design decision**: the 7B model running on CPU-only
-hardware requires tight prompt engineering (personality-description style) and
-an explicit echo guardrail that are easier to implement with direct LLM calls.
-The chain is retained so it can be swapped in when moving to a larger model or
-cloud-hosted inference where these workarounds are unnecessary.
+This is a **conscious design decision**: the 8B model on CPU benefits from tight prompt engineering and an explicit echo guardrail, which are easier with direct LLM calls. A LangChain retrieval chain can be added later (e.g. in `backend/core.py` or a separate module) when moving to a larger model or cloud inference.
 
 ---
 

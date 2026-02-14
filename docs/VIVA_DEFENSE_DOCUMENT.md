@@ -1,6 +1,8 @@
 # AI Healthcare Chatbot - وثيقة التحضير للمناقشة
 ## Viva Defense Preparation Document
 
+> **Note:** This document describes the **archived** multi-agent architecture (Streamlit, SymptomAgent, DiagnosisAgent, etc.). The **current production system** is the Chainlit-based RAG chatbot (LLaMA 3 via Ollama, ChromaDB, HuggingFace embeddings). For the active architecture, see the [README](../README.md) and [ARCHITECTURE_WALKTHROUGH.md](ARCHITECTURE_WALKTHROUGH.md).
+
 ---
 
 # 1) ملخص المشروع (Elevator Pitch)

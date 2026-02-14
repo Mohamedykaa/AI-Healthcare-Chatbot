@@ -40,9 +40,13 @@
 - [Ollama](https://ollama.ai/) installed and running
 - LLaMA 3 model pulled: `ollama pull llama3:8b`
 
+### Requirements files
+- **`requirements_chainlit.txt`** — Use this for the **Chainlit chat UI** (recommended). Covers Chainlit, LangChain, ChromaDB, embeddings, and Ollama integration.
+- **`requirements_api.txt`** — Use this if you only need the **FastAPI REST API** (e.g. headless or programmatic access). Install this instead of (or in addition to) the Chainlit requirements when running `api.py`.
+
 ### Install & Run
 ```bash
-# 1. Install dependencies
+# 1. Install dependencies (Chainlit UI)
 pip install -r requirements_chainlit.txt
 
 # 2. Ingest medical data (first time only)
@@ -53,6 +57,16 @@ chainlit run app.py
 ```
 
 The chatbot will be available at `http://localhost:8000`.
+
+**Windows:** You can run `run_all.bat` to perform steps 1–3 in one go (install, optional ingest, then start Chainlit).
+
+### Running the API instead of (or alongside) the UI
+To run the **FastAPI** server (e.g. for programmatic access), use a **different port** so it does not conflict with Chainlit:
+```bash
+pip install -r requirements_api.txt   # if not already installed
+uvicorn api:app --host 0.0.0.0 --port 8001
+```
+The API will be at `http://localhost:8001`. Chainlit and the API share the same backend logic; do not run both on port 8000.
 
 ---
 

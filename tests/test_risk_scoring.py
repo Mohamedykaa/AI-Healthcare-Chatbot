@@ -1,83 +1,10 @@
 """Tests for deterministic triage risk scoring behavior."""
 
-import re
-
-
-CRITICAL_KEYWORDS = [
-    "heart attack", "stroke", "severe bleeding", "loss of consciousness",
-    "unconscious", "seizure", "severe head injury", "poisoning", "overdose",
-    "suicidal", "suicide", "self harm", "severe allergic reaction",
-    "anaphylaxis", "choking", "heatstroke", "sunstroke",
-]
-ASSOCIATED_RED_FLAGS = ["shortness of breath", "cold sweating"]
-CORE_SYMPTOM_KEYWORDS = ["chest pain", "cannot breathe", "cant breathe", "difficulty breathing", "fainting"]
-SEVERE_MODIFIERS = ["severe", "crushing", "worst", "sudden"]
-LOW_RISK_MODIFIERS = ["mild", "localized", "only when pressing", "brief"]
-
-EMERGENCY_SCORE_THRESHOLD = 6
-URGENT_SCORE_THRESHOLD = 3
-
-
-def normalize_input(text: str) -> str:
-    lowered = text.lower().strip()
-    lowered = re.sub(r"[^\w\s]", " ", lowered)
-    return re.sub(r"\s+", " ", lowered)
-
-
-def contains_phrase(text: str, phrase: str) -> bool:
-    return re.search(rf"\b{re.escape(phrase)}\b", text) is not None
-
-
-def _match_category_phrases(normalized_input: str, phrases: list[str], used_phrases: set[str]) -> set[str]:
-    matched = set()
-    for phrase in phrases:
-        if phrase in used_phrases:
-            continue
-        if contains_phrase(normalized_input, phrase):
-            matched.add(phrase)
-    return matched
-
-
-def calculate_risk_score(user_input: str) -> int:
-    normalized = normalize_input(user_input)
-    used_phrases: set[str] = set()
-    score = 0
-
-    red_flag_matches = _match_category_phrases(normalized, ASSOCIATED_RED_FLAGS, used_phrases)
-    used_phrases.update(red_flag_matches)
-    score += 3 * len(red_flag_matches)
-
-    core_matches = _match_category_phrases(normalized, CORE_SYMPTOM_KEYWORDS, used_phrases)
-    used_phrases.update(core_matches)
-    score += 3 * len(core_matches)
-
-    severe_matches = _match_category_phrases(normalized, SEVERE_MODIFIERS, used_phrases)
-    used_phrases.update(severe_matches)
-    score += 2 * len(severe_matches)
-
-    low_risk_matches = _match_category_phrases(normalized, LOW_RISK_MODIFIERS, used_phrases)
-    score -= 2 * len(low_risk_matches)
-
-    return score
-
-
-def assess_risk_level(user_input: str) -> str:
-    normalized = normalize_input(user_input)
-
-    for keyword in CRITICAL_KEYWORDS:
-        if contains_phrase(normalized, keyword):
-            return "EMERGENCY"
-
-    score = calculate_risk_score(user_input)
-    if score >= EMERGENCY_SCORE_THRESHOLD:
-        return "EMERGENCY"
-    if score >= URGENT_SCORE_THRESHOLD:
-        return "URGENT"
-    return "ROUTINE"
-
-
-def check_for_emergency(user_input: str) -> bool:
-    return assess_risk_level(user_input) == "EMERGENCY"
+from backend.risk import (
+    assess_risk_level,
+    calculate_risk_score,
+    check_for_emergency,
+)
 
 
 def test_hard_stop_suicidal_is_emergency():
