@@ -160,6 +160,7 @@ async def process_chat_message(user_input: str, chat_history: list):
         initialize_components()
 
     retriever = _VECTORSTORE.as_retriever(
+        search_type="similarity_score_threshold",
         search_kwargs={"k": RETRIEVER_K, "score_threshold": RETRIEVER_SCORE_THRESHOLD}
     )
     docs = retriever.invoke(user_input)
