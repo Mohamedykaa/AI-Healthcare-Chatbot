@@ -7,7 +7,7 @@ Uses backend.risk (dependency-free module shared with backend.core).
 """
 
 import pytest
-from backend.risk import (
+from src.core.risk import (
     CRITICAL_KEYWORDS,
     check_for_emergency,
     get_emergency_response,

@@ -1,6 +1,6 @@
 """Tests for deterministic triage risk scoring behavior."""
 
-from backend.risk import (
+from src.core.risk import (
     assess_risk_level,
     calculate_risk_score,
     check_for_emergency,

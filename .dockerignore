@@ -1,0 +1,41 @@
+# Virtual environments
+venv/
+venv_gpu/
+.venv/
+
+# Git
+.git/
+.gitignore
+
+# Runtime-generated stores (rebuilt inside container if needed)
+chroma_db/
+chroma_db_medical/
+
+# Archive (legacy, not needed at runtime)
+archive/
+
+# Caches
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment secrets (injected at runtime)
+.env
+
+# Docs (not needed at runtime)
+docs/
+
+# Tests (not needed in production image)
+tests/

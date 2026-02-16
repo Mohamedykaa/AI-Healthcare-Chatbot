@@ -8,7 +8,7 @@ A fully offline medical chatbot using:
 - ChromaDB for persistent vector storage
 - LangChain RAG architecture
 
-Entry point: chainlit run app.py
+Entry point: chainlit run src/ui/app.py
 """
 
 import os
@@ -18,14 +18,23 @@ import chainlit as cl
 from langchain_core.messages import HumanMessage, AIMessage
 
 # Import core logic
-from backend.core import (
+from src.core.logic import (
     initialize_components,
-    assess_risk_level,
-    get_emergency_response,
-    process_chat_message,
-    _VECTORSTORE,
-    _LLM
+    process_chat_message
 )
+# Note: assess_risk_level and get_emergency_response are internal to logic/disk but
+# if app.py doesn't use them directly other than via process_chat_message, we don't need to import them.
+# Checking original app.py... it DOES import them but seemingly doesn't use them directly in the UI code 
+# except implicitly via the response construction logic which was moved to core.
+# Wait, let's double check if I missed anything.
+# Original app.py imported: assess_risk_level, get_emergency_response.
+# But looking at on_message, it calls process_chat_message. 
+# It doesn't seem to call assess_risk_level directly. 
+# Ah, verify if any logic was left behind in app.py.
+# process_chat_message returns response_text, risk_level, sources_text.
+# And app.py handles the disclaimer based on risk_level.
+# So app.py does NOT need to import assess_risk_level directly.
+# Proceeding with imports from src.core.logic.
 
 # Load environment variables
 load_dotenv()
@@ -123,4 +132,4 @@ async def on_message(message: cl.Message):
 
 
 if __name__ == "__main__":
-    print("Run this application with: chainlit run app.py")
+    print("Run this application with: chainlit run src/ui/app.py")

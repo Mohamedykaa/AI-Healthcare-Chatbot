@@ -68,6 +68,19 @@ uvicorn api:app --host 0.0.0.0 --port 8001
 ```
 The API will be at `http://localhost:8001`. Chainlit and the API share the same backend logic; do not run both on port 8000.
 
+### 🐳 Docker Deployment
+Build and run the chatbot inside a Docker container. Ollama must be running on the **host machine**.
+```bash
+# Build the image
+docker build -t medical-chatbot .
+
+# Run (Linux/macOS — Ollama on host)
+docker run -p 8000:8000 -e OLLAMA_BASE_URL=http://host.docker.internal:11434 medical-chatbot
+
+# Run (Windows/Docker Desktop — same command works)
+docker run -p 8000:8000 -e OLLAMA_BASE_URL=http://host.docker.internal:11434 medical-chatbot
+```
+
 ---
 
 ## 🛡️ Safety Features
@@ -88,6 +101,40 @@ pytest tests/
 # Manual RAG chain verification (requires Ollama)
 python scripts/test_rag_chain.py
 ```
+
+## 📊 RAG Evaluation
+
+Quantitatively measure the quality of the RAG pipeline:
+
+```bash
+# Full evaluation (retrieval + triage + answer faithfulness)
+python scripts/evaluate_rag.py
+
+# Retrieval-only mode (no LLM needed)
+python scripts/evaluate_rag.py --retrieval
+```
+
+Metrics measured:
+- **Triage Accuracy** — Deterministic emergency/urgent/routine classification against gold labels
+- **Retrieval Hit Rate** — Percentage of questions where relevant documents are successfully retrieved
+- **Answer Faithfulness** — Whether LLM answers reference retrieved context (not hallucinated)
+
+Results are saved to `evaluation_results.json`.
+
+## 🖥️ Admin Dashboard
+
+A Streamlit-based monitoring dashboard for system administration:
+
+```bash
+pip install streamlit
+streamlit run scripts/admin_dashboard.py
+```
+
+**Features:**
+- 🩺 **System Health** — Live status of Ollama, ChromaDB, and embeddings
+- 📚 **Knowledge Base Inspector** — Browse and preview ingested medical data
+- 🚨 **Emergency Detection Tester** — Interactive risk triage classifier
+- 🔍 **RAG Query Runner** — Send test queries through the full pipeline
 
 ## Project Integrity Check
 

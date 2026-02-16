@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 import uvicorn
 from contextlib import asynccontextmanager
-from backend.core import initialize_components, process_chat_message
+from src.core.logic import initialize_components, process_chat_message
 
 # ============================================================
 # API MODELS
