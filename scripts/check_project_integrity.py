@@ -35,7 +35,8 @@ def check_required_files() -> bool:
     """Ensure critical files for the active architecture exist."""
     _print_header("Required Files")
     required = [
-        "app.py",
+        "src/ui/app.py",
+        "run_app.py",
         "requirements_chainlit.txt",
         "README.md",
         "pytest.ini",

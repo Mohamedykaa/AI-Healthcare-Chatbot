@@ -3,7 +3,7 @@ Emergency Detection Tests
 ===========================
 
 Tests for risk assessment and emergency response.
-Uses backend.risk (dependency-free module shared with backend.core).
+Uses src.core.risk (dependency-free module shared with src.core.logic).
 """
 
 import pytest
