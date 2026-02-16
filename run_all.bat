@@ -16,4 +16,4 @@ if errorlevel 1 (
 
 echo.
 echo Starting Chainlit chatbot at http://localhost:8000 ...
-chainlit run app.py
+python run_app.py

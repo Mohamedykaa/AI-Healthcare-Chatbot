@@ -42,7 +42,7 @@
 
 ### Requirements files
 - **`requirements_chainlit.txt`** — Use this for the **Chainlit chat UI** (recommended). Covers Chainlit, LangChain, ChromaDB, embeddings, and Ollama integration.
-- **`requirements_api.txt`** — Use this if you only need the **FastAPI REST API** (e.g. headless or programmatic access). Install this instead of (or in addition to) the Chainlit requirements when running `api.py`.
+- **`requirements_api.txt`** — Use this if you only need the **FastAPI REST API** (e.g. headless or programmatic access). Install this instead of (or in addition to) the Chainlit requirements when running `src/api/main.py`.
 
 ### Install & Run
 ```bash
@@ -53,7 +53,9 @@ pip install -r requirements_chainlit.txt
 python scripts/ingest_data.py
 
 # 3. Start the chatbot
-chainlit run app.py
+python run_app.py
+# OR
+chainlit run src/ui/app.py
 ```
 
 The chatbot will be available at `http://localhost:8000`.
@@ -64,7 +66,9 @@ The chatbot will be available at `http://localhost:8000`.
 To run the **FastAPI** server (e.g. for programmatic access), use a **different port** so it does not conflict with Chainlit:
 ```bash
 pip install -r requirements_api.txt   # if not already installed
-uvicorn api:app --host 0.0.0.0 --port 8001
+python run_api.py
+# OR
+uvicorn src.api.main:app --host 0.0.0.0 --port 8001
 ```
 The API will be at `http://localhost:8001`. Chainlit and the API share the same backend logic; do not run both on port 8000.
 

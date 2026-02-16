@@ -19,11 +19,12 @@ COPY requirements_chainlit.txt .
 RUN pip install --no-cache-dir -r requirements_chainlit.txt
 
 # ---- Application code ----
-COPY backend/          backend/
+# ---- Application code ----
+COPY src/              src/
 COPY scripts/          scripts/
 COPY data/             data/
-COPY app.py            .
-COPY api.py            .
+COPY run_app.py        .
+COPY run_api.py        .
 COPY chainlit.md       .
 COPY .chainlit/        .chainlit/
 COPY pytest.ini        .
@@ -36,4 +37,4 @@ HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/')" || exit 1
 
 # Default command: start Chainlit
-CMD ["chainlit", "run", "app.py", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "run_app.py"]

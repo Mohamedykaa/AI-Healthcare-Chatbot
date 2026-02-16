@@ -81,22 +81,22 @@ User Input → Chainlit on_message handler
 
 ## Core Components
 
-### 1. Chainlit Application ([app.py](file:///d:/disease_prediction_project/app.py))
+### 1. Chainlit Application ([src/ui/app.py](file:///d:/disease_prediction_project/src/ui/app.py))
 
-The **single-file application** serving as the chat UI; all RAG and risk logic lives in [backend/core.py](file:///d:/disease_prediction_project/backend/core.py).
+The **single-file application** serving as the chat UI; all RAG and risk logic lives in [src/core/logic.py](file:///d:/disease_prediction_project/src/core/logic.py).
 
 **Handlers:**
 - `on_chat_start()` — Session init: initializes shared components (if needed) and sets empty chat history in `cl.user_session`
-- `on_message()` — Per-message handler: delegates to `backend.core.process_chat_message()` (emergency check → manual retrieval → LLM call → source formatting → response)
+- `on_message()` — Per-message handler: delegates to `src.core.logic.process_chat_message()` (emergency check → manual retrieval → LLM call → source formatting → response)
 
-**Key logic (in [backend/core.py](file:///d:/disease_prediction_project/backend/core.py)):**
+**Key logic (in [src/core/logic.py](file:///d:/disease_prediction_project/src/core/logic.py)):**
 - `get_embedding_function()` — CPU-forced HuggingFace embeddings (all-MiniLM-L6-v2)
 - `load_or_create_vectorstore()` — Loads ChromaDB from `./chroma_db` or creates from `data/medical_knowledge_*.txt`
 - `validate_chroma_db()` — Integrity test query on startup
 - `normalize_text()` — Whitespace / newline cleaning
 - `get_llm()` — Initialises `ChatOllama` with Llama 3 8B
 - **Manual retrieval only** — No RAG chain is built at runtime; the retriever is invoked directly and a custom prompt is built. A LangChain history-aware retrieval chain is **reserved for future use** if moving to a larger/cloud model (see *RAG Chain vs. Manual Retrieval* below).
-- Emergency detection and response — Implemented in [backend/risk.py](file:///d:/disease_prediction_project/backend/risk.py) (pure, dependency-free); `format_sources()` in core formats retrieved documents as citations.
+- Emergency detection and response — Implemented in [src/core/risk.py](file:///d:/disease_prediction_project/src/core/risk.py) (pure, dependency-free); `format_sources()` in core formats retrieved documents as citations.
 
 ### 2. Data Ingestion Script ([scripts/ingest_data.py](file:///d:/disease_prediction_project/scripts/ingest_data.py))
 
@@ -106,7 +106,7 @@ The **single-file application** serving as the chat UI; all RAG and risk logic l
 - Splits text using `RecursiveCharacterTextSplitter`
 - Creates/updates the persistent ChromaDB vectorstore in `./chroma_db`
 
-### 3. Emergency Detection (in [app.py](file:///d:/disease_prediction_project/app.py))
+### 3. Emergency Detection (in [src/ui/app.py](file:///d:/disease_prediction_project/src/ui/app.py))
 
 **Purpose:** Pre-validate user input for safety before RAG processing.
 
@@ -118,7 +118,7 @@ The **single-file application** serving as the chat UI; all RAG and risk logic l
 
 ## User Interface
 
-### Chainlit UI (built into [app.py](file:///d:/disease_prediction_project/app.py))
+### Chainlit UI (built into [src/ui/app.py](file:///d:/disease_prediction_project/src/ui/app.py))
 
 The UI is provided by the **Chainlit** framework — no separate frontend process is required.
 
@@ -129,7 +129,7 @@ The UI is provided by the **Chainlit** framework — no separate frontend proces
 - Welcome message with usage guidance (configured in `chainlit.md`)
 
 **Session State (per user):**
-- `chat_history` — List of `HumanMessage` / `AIMessage` objects (vectorstore and LLM are process-wide singletons in `backend.core`, not stored per session)
+- `chat_history` — List of `HumanMessage` / `AIMessage` objects (vectorstore and LLM are process-wide singletons in `src.core.logic`, not stored per session)
 
 ---
 
@@ -140,7 +140,7 @@ The UI is provided by the **Chainlit** framework — no separate frontend proces
 | [medical_knowledge_medmcqa.txt](file:///d:/disease_prediction_project/data/medical_knowledge_medmcqa.txt) | Medical Q&A knowledge (MedMCQA corpus) |
 | [medical_knowledge_medquad.txt](file:///d:/disease_prediction_project/data/medical_knowledge_medquad.txt) | Medical Q&A knowledge (MedQuAD corpus) |
 | [medical_knowledge_public_health.txt](file:///d:/disease_prediction_project/data/medical_knowledge_public_health.txt) | Public health knowledge base |
-| `chroma_db/` | Persistent ChromaDB vector store (created by `scripts/ingest_data.py` or `app.py` on first run) |
+| `chroma_db/` | Persistent ChromaDB vector store (created by `scripts/ingest_data.py` or `src/ui/app.py` on first run) |
 
 ---
 
@@ -170,7 +170,7 @@ All of the above now reside under `archive/` and are **not used** by the active 
 
 ## LLM Integration
 
-### ChatOllama — Llama 3 8B (configured in [backend/core.py](file:///d:/disease_prediction_project/backend/core.py))
+### ChatOllama — Llama 3 8B (configured in [src/services/llm.py](file:///d:/disease_prediction_project/src/services/llm.py))
 
 - Served locally via **Ollama** (`ChatOllama` LangChain wrapper)
 - Model: `llama3:8b` (configurable via `LLM_MODEL` env var)
@@ -199,16 +199,16 @@ Run with: `pytest tests/`
 
 | Setting | Location | Purpose |
 |---------|----------|---------|
-| `CHROMA_PERSIST_DIR` | backend/core.py / `.env` | ChromaDB storage path (default `./chroma_db`) |
-| `LLM_MODEL` | backend/core.py / `.env` | LLM model name (default `llama3:8b`) |
-| `LLM_TEMPERATURE` | backend/core.py (hardcoded) | LLM sampling temperature (0.3) |
-| Retriever `k` / `score_threshold` | backend/core.py | Number of documents and minimum similarity (see code) |
+| `CHROMA_PERSIST_DIR` | src/core/config.py / `.env` | ChromaDB storage path (default `./chroma_db`) |
+| `LLM_MODEL` | src/core/config.py / `.env` | LLM model name (default `llama3:8b`) |
+| `LLM_TEMPERATURE` | src/services/llm.py (hardcoded) | LLM sampling temperature (0.3) |
+| Retriever `k` / `score_threshold` | src/core/config.py | Number of documents and minimum similarity (see code) |
 
 ---
 
 ## Note: RAG Chain vs. Manual Retrieval
 
-The active codebase uses **manual retrieval only**: [backend/core.py](file:///d:/disease_prediction_project/backend/core.py) calls the vectorstore retriever directly and builds a custom prompt for each message. No LangChain `create_history_aware_retriever` or `create_retrieval_chain` is built or invoked at runtime.
+The active codebase uses **manual retrieval only**: [src/core/logic.py](file:///d:/disease_prediction_project/src/core/logic.py) calls the vectorstore retriever directly and builds a custom prompt for each message. No LangChain `create_history_aware_retriever` or `create_retrieval_chain` is built or invoked at runtime.
 
 | Aspect | History-Aware RAG Chain | Manual Retrieval (active) |
 |--------|------------------------|---------------------------|
@@ -216,7 +216,7 @@ The active codebase uses **manual retrieval only**: [backend/core.py](file:///d:
 | **Status** | Not present in codebase | Used for every user message in `process_chat_message()` |
 | **Reason** | — | Full control over prompt formatting, echo-guardrails, and turn-phase logic for LLaMA 3 8B on local hardware |
 
-This is a **conscious design decision**: the 8B model on CPU benefits from tight prompt engineering and an explicit echo guardrail, which are easier with direct LLM calls. A LangChain retrieval chain can be added later (e.g. in `backend/core.py` or a separate module) when moving to a larger model or cloud inference.
+This is a **conscious design decision**: the 8B model on CPU benefits from tight prompt engineering and an explicit echo guardrail, which are easier with direct LLM calls. A LangChain retrieval chain can be added later (e.g. in `src/core/logic.py` or a separate module) when moving to a larger model or cloud inference.
 
 ---
 
@@ -227,7 +227,7 @@ This is a **conscious design decision**: the 8B model on CPU benefits from tight
 python scripts/ingest_data.py
 
 # 2. Start the chatbot
-chainlit run app.py
+python run_app.py
 ```
 
 > [!TIP]
