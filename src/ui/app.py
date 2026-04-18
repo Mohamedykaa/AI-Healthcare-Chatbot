@@ -22,19 +22,7 @@ from src.core.logic import (
     initialize_components,
     process_chat_message
 )
-# Note: assess_risk_level and get_emergency_response are internal to logic/disk but
-# if app.py doesn't use them directly other than via process_chat_message, we don't need to import them.
-# Checking original app.py... it DOES import them but seemingly doesn't use them directly in the UI code 
-# except implicitly via the response construction logic which was moved to core.
-# Wait, let's double check if I missed anything.
-# Original app.py imported: assess_risk_level, get_emergency_response.
-# But looking at on_message, it calls process_chat_message. 
-# It doesn't seem to call assess_risk_level directly. 
-# Ah, verify if any logic was left behind in app.py.
-# process_chat_message returns response_text, risk_level, sources_text.
-# And app.py handles the disclaimer based on risk_level.
-# So app.py does NOT need to import assess_risk_level directly.
-# Proceeding with imports from src.core.logic.
+
 
 # Load environment variables
 load_dotenv()

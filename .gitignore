@@ -56,7 +56,7 @@ __pycache__/
 
 # User-specific temporary/scratch files
 short_structure.txt
-file.py!scripts/run_all.bat
+
 
 # ChromaDB vector store (generated at runtime)
 chroma_db/

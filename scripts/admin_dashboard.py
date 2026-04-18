@@ -117,7 +117,7 @@ def page_system_health():
             st.markdown('<span class="status-ok">● EXISTS</span>', unsafe_allow_html=True)
             # Try to load and count
             try:
-                from backend.core import get_embedding_function, load_or_create_vectorstore
+                from src.services.vectorstore import get_embedding_function, load_or_create_vectorstore
                 emb = get_embedding_function()
                 vs = load_or_create_vectorstore(emb)
                 count = vs._collection.count()
@@ -216,7 +216,7 @@ def page_emergency_tester():
         "This does **not** call the LLM — it uses the pure rule-based `backend.risk` module."
     )
 
-    from backend.risk import assess_risk_level, calculate_risk_score, normalize_input
+    from src.core.risk import assess_risk_level, calculate_risk_score, normalize_input
 
     user_input = st.text_area(
         "Enter a patient message:",
@@ -293,7 +293,7 @@ def page_rag_query_runner():
         with st.spinner("Loading components and running query …"):
             try:
                 import asyncio
-                from backend.core import initialize_components, process_chat_message
+                from src.core.logic import initialize_components, process_chat_message
 
                 initialize_components()
                 response_text, risk_level, sources_text = asyncio.run(

@@ -1,14 +1,17 @@
-# Welcome to Chainlit! 🚀🤖
+# 🏥 AI Healthcare Chatbot
 
-Hi there, Developer! 👋 We're excited to have you on board. Chainlit is a powerful tool designed to help you prototype, debug and share applications built on top of LLMs.
+Welcome! This is a **local, privacy-first medical information assistant** powered by Retrieval-Augmented Generation (RAG).
 
-## Useful Links 🔗
+## How It Works
+- Ask about **symptoms, conditions, or health topics**
+- The chatbot retrieves relevant information from a curated medical knowledge base
+- Responses include **source citations** for transparency
 
-- **Documentation:** Get started with our comprehensive [Chainlit Documentation](https://docs.chainlit.io) 📚
-- **Discord Community:** Join our friendly [Chainlit Discord](https://discord.gg/k73SQ3FyUh) to ask questions, share your projects, and connect with other developers! 💬
+## ⚠️ Important
+- This is an **AI for educational purposes only** — not a medical professional
+- Always **consult a qualified healthcare provider** for medical advice
+- If you are experiencing a **medical emergency**, call **911 / 999 / 112** immediately
 
-We can't wait to see what you create with Chainlit! Happy coding! 💻😊
+---
+*Developed by Mohamed Yaser | 2026*
 
-## Welcome screen
-
-To modify the welcome screen, edit the `chainlit.md` file at the root of your project. If you do not want a welcome screen, just leave this file empty.

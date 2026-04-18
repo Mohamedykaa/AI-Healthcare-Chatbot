@@ -4,7 +4,7 @@
 >
 > This project has undergone an architectural evolution. The original
 > microservices stack (FastAPI, Celery, Redis, Nginx WAF, Docker Compose)
-> has been **archived** in the `/archive` directory for reference.
+> has been archived externally (see `d:\disease_prediction_project_archive`).
 >
 > The **active, production-ready implementation** is a self-contained
 > **Chainlit-based RAG chatbot** powered by LLaMA 3 (via Ollama),
@@ -101,9 +101,6 @@ docker run -p 8000:8000 -e OLLAMA_BASE_URL=http://host.docker.internal:11434 med
 ```bash
 # Run unit tests (no LLM or ChromaDB required)
 pytest tests/
-
-# Manual RAG chain verification (requires Ollama)
-python scripts/test_rag_chain.py
 ```
 
 ## 📊 RAG Evaluation
@@ -177,7 +174,7 @@ The deterministic triage layer is intentionally calibrated to reduce false-posit
 
 ## 📂 Archived Architecture (Reference Only)
 
-The original production-grade microservices design is preserved in `/archive`:
+The original production-grade microservices design is preserved externally in `d:\disease_prediction_project_archive`:
 
 - **Gateway**: Nginx + ModSecurity WAF + OWASP CRS (SSL/TLS)
 - **Frontend**: Streamlit (Polling Architecture)
@@ -185,19 +182,6 @@ The original production-grade microservices design is preserved in `/archive`:
 - **Worker**: Celery + Redis (Offloaded Inference)
 - **AI Core**: BioMistral (LLM) + TensorFlow (Vision)
 - **Observability**: OpenTelemetry + Jaeger + Prometheus
-
-Security features from the archived version:
-- **WAF**: Blocks SQL Injection, XSS (ModSecurity)
-- **Semantic Firewall**: Blocks Prompt Injection attacks
-- **Rate Limiting**: 20 req/min throttling (SlowAPI)
-- **Compliance**: PII Scrubbing & Encrypted DB Connections
-- **Supply Chain**: Automated Trivy vulnerability scanning
-
-```bash
-# (Archived) Docker deployment
-cd archive
-docker-compose up --build -d
-```
 
 ---
 
