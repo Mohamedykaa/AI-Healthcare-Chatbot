@@ -19,7 +19,6 @@ COPY requirements_chainlit.txt .
 RUN pip install --no-cache-dir -r requirements_chainlit.txt
 
 # ---- Application code ----
-# ---- Application code ----
 COPY src/              src/
 COPY scripts/          scripts/
 COPY data/             data/

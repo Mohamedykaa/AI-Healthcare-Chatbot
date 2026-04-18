@@ -11,8 +11,7 @@ A fully offline medical chatbot using:
 Entry point: chainlit run src/ui/app.py
 """
 
-import os
-import asyncio
+
 from dotenv import load_dotenv
 import chainlit as cl
 from langchain_core.messages import HumanMessage, AIMessage

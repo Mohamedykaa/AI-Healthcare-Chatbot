@@ -51,7 +51,7 @@ async def process_chat_message(user_input: str, chat_history: list):
     if risk_level == "EMERGENCY":
         return get_emergency_response(), risk_level, ""
 
-    if not _LLM or not _VECTORSTORE:
+    if _LLM is None or _VECTORSTORE is None:
         initialize_components()
 
     retriever = _VECTORSTORE.as_retriever(
@@ -102,6 +102,8 @@ CRITICAL INSTRUCTIONS:
 - Do NOT say "This is just a guess".
 
 If you still need more information to be sure, ask 1-2 focused follow-up questions.
+
+Medical context: {context_text[:800]}
 
 {f"Conversation so far:{chr(10)}{history_text}" if history_text else ""}
 

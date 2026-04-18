@@ -86,6 +86,6 @@ def load_or_create_vectorstore(embedding_function: HuggingFaceEmbeddings) -> Chr
             batch = splits[i:i + BATCH_SIZE]
             vectorstore.add_documents(batch)
     
-    vectorstore.persist()
+    
     print(f"ChromaDB created and persisted at {CHROMA_PERSIST_DIR}")
     return vectorstore

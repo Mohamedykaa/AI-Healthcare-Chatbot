@@ -40,6 +40,4 @@ def test_chat_endpoint_error(mock_process):
     assert response.status_code == 500
     assert "Internal Error" in response.json()["detail"]
 
-def test_chat_emergency_Mock():
-    # Test emergency flow directly if possible, or mock logic
-    pass
+

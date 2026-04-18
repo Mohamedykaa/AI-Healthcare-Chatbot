@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List
 import uvicorn
 from contextlib import asynccontextmanager
 from src.core.logic import initialize_components, process_chat_message

@@ -155,7 +155,8 @@ def page_system_health():
         for f in sorted(files):
             fp = os.path.join(data_dir, f)
             size_kb = os.path.getsize(fp) / 1024
-            line_count = sum(1 for _ in open(fp, encoding="utf-8", errors="ignore"))
+            with open(fp, encoding="utf-8", errors="ignore") as fh:
+                line_count = sum(1 for _ in fh)
             st.write(f"- **{f}** — {size_kb:.0f} KB, {line_count:,} lines")
     else:
         st.warning("Data directory not found.")
@@ -213,7 +214,7 @@ def page_emergency_tester():
     st.title("🚨 Emergency Detection Tester")
     st.markdown(
         "Type a message below to see how the deterministic triage engine classifies it. "
-        "This does **not** call the LLM — it uses the pure rule-based `backend.risk` module."
+        "This does **not** call the LLM — it uses the pure rule-based `src.core.risk` module."
     )
 
     from src.core.risk import assess_risk_level, calculate_risk_score, normalize_input
@@ -275,7 +276,7 @@ def page_emergency_tester():
                        "ROUTINE": "background-color: #00c853; color: white"}
             return colors.get(val, "")
 
-        styled = df.style.applymap(color_risk, subset=["Risk Level"])
+        styled = df.style.map(color_risk, subset=["Risk Level"])
         st.dataframe(styled, use_container_width=True)
 
 
