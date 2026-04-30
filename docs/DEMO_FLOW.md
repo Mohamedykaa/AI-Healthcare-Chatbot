@@ -1,11 +1,12 @@
 
+## 🚀 Step 1: Launch the Application
 
 ### Run the Chatbot
 ```bash
 python run_app.py
 ```
 
-The chatbot will open automatically at **http://localhost:8000
+The chatbot will open automatically at **http://localhost:8000**
 
 > ⏱️ First launch after a fresh install may take 1–2 minutes to build the vector database.
 > Subsequent launches are instant.
@@ -16,6 +17,8 @@ The chatbot will open automatically at **http://localhost:8000
 
 This scenario demonstrates **RAG retrieval**, **multi-turn conversation**, and **source citation**.
 
+> 🎯 **Clinical Impact:** "The goal of this system is not diagnosis — it's *safe triage*. It helps users understand when to seek care and prevents dangerous underestimation of symptoms. Every critical safety decision is deterministic and cannot be overridden by the language model."
+
 ### Turn 1 — Initial Symptom Input
 
 **You type:**
@@ -24,30 +27,30 @@ I have been feeling very tired lately, with frequent headaches and dizziness
 ```
 
 **What to expect:**
-- The bot will explain these symptoms in simple medical terms
-- It will mention 2–3 possible conditions (e.g., anemia, dehydration, blood pressure issues)
-- It will ask 1–2 follow-up questions to narrow down
+- The bot will acknowledge the symptoms empathetically
+- It will ask about **onset and duration** ("When did this start? Was it sudden or gradual?")
+- It will **NOT** suggest any conditions yet
 - Sources will be cited at the bottom (📚 References)
 
 **What to point out to your professor:**
-> "The system retrieved relevant medical documents from ChromaDB using semantic similarity, then used LLaMA 3 to generate a grounded response. Notice the source citations at the bottom — the bot never hallucinates, it always references its knowledge base."
+> "The system uses a structured triage pipeline. On the first turn, it performs initial screening — asking about duration before jumping to any conclusions. This mirrors how a real clinician conducts an intake interview."
 
 ---
 
-### Turn 2 — Answering Follow-Up Questions
+### Turn 2 — Providing Duration & Timeline
 
 **You type:**
 ```
-Yes I have been eating less than usual and I feel cold all the time
+It started about 2 weeks ago and has been gradually getting worse. I feel it almost every day now.
 ```
 
 **What to expect:**
-- The bot uses conversation history to narrow down
-- It becomes more specific, possibly pointing toward iron-deficiency anemia
-- It may ask about additional symptoms (pale skin, shortness of breath)
+- The bot uses conversation history to identify what info is still missing
+- It will ask about **patterns and triggers** ("Do you feel worse at certain times? After eating? During specific activities?")
+- It still does NOT suggest conditions — it's gathering information systematically
 
 **What to point out:**
-> "The system maintains multi-turn context. It remembers the previous symptoms and uses the new information to refine its analysis — similar to how a doctor conducts a differential diagnosis."
+> "The system tells the LLM exactly which information is still missing — severity, context, red-flag status — and asks targeted questions to fill those gaps. This is sufficiency-based phase detection, not random follow-up."
 
 ---
 
@@ -55,16 +58,19 @@ Yes I have been eating less than usual and I feel cold all the time
 
 **You type:**
 ```
-Yes my skin has been pale and I get short of breath when climbing stairs
+The headache is about 7/10, I haven't been sleeping well and I'm very stressed at work. No fainting or vision problems. It's usually worse in the evening.
 ```
 
 **What to expect:**
-- The bot will now provide a more confident assessment
-- It will explain *why* this pattern is consistent with a specific condition
-- It will recommend seeing a doctor
+- The bot detects that all 4 sufficiency markers are met (onset, severity, red flags, context)
+- It provides a **Tier 1 — Common/Simple causes** assessment:
+  - Links the symptoms to stress, poor sleep, and fatigue
+  - Recommends practical steps (sleep hygiene, stress management, self-care)
+  - Advises consulting a doctor if symptoms persist or worsen
+- It does NOT jump to rare or alarming conditions
 
 **What to point out:**
-> "After gathering enough information through follow-up questions, the system provides its assessment with medically cautious language. It always recommends professional consultation — it never claims to diagnose."
+> "The system only gives its assessment after gathering enough structured information. It uses regex-based sufficiency markers to decide when to transition from questioning to differential — this is deterministic, not LLM intuition. And notice it starts with the most common causes, not jumping to rare conditions."
 
 ---
 
@@ -76,7 +82,7 @@ This scenario demonstrates the **deterministic safety layer** that bypasses the 
 
 **You type:**
 ```
-I am having a heart attack right now and I can't breathe
+I have severe chest pain and sweating and I feel like I cannot breathe
 ```
 
 **What to expect:**
@@ -86,7 +92,7 @@ I am having a heart attack right now and I can't breathe
 - Response is instant (no LLM delay)
 
 **What to point out:**
-> "This is our safety-first architecture. The keyword 'heart attack' triggers a hard-stop in the deterministic risk engine (`risk.py`). This layer runs BEFORE the LLM — it uses pure regex matching with zero dependencies. The response is instant because it bypasses the AI model entirely. This ensures we never give medical advice in life-threatening situations."
+> "This is our safety-first architecture. Core high-risk symptom patterns trigger a hard-stop in the deterministic risk engine (`risk.py`). This layer runs BEFORE the LLM — it uses pure regex matching with zero dependencies. The response is instant because it bypasses the AI model entirely. This ensures we never give medical advice in life-threatening situations."
 
 ---
 
@@ -96,61 +102,117 @@ This shows the middle tier: not an emergency, but flagged as urgent.
 
 **You type:**
 ```
-I have severe chest pain and cold sweating
+I have sudden chest pain
 ```
 
 **What to expect:**
 - ⚠️ **URGENT ADVICE REQUIRED** banner appears at the top
-- The bot still provides information, but with an urgent warning
+- The bot provides a focused, cautious assessment with an urgent tone
 - Recommends same-day medical evaluation
 
 **What to point out:**
-> "The scoring engine calculates a risk score: 'chest pain' = 3 points, 'cold sweating' = 3 points, 'severe' = 2 points = total 8 points, which exceeds the emergency threshold of 6. This is a calibrated system — a single symptom like mild chest pain won't trigger emergency, but the combination of red flags does."
+> "The scoring engine calculates a risk score: 'chest pain' = 3 points, 'sudden' = 2 points = total 5 points, which exceeds the urgent threshold of 3 but stays below the emergency threshold of 6. This is a calibrated three-tier system — a single moderate symptom won't trigger urgency, but the combination of a core symptom with a severe modifier does. *(Note: These are heuristic weights for demonstration purposes, not calibrated clinical thresholds).* "
 
 ---
 
-## 🔍 Step 5: Demo Scenario — General Medical Knowledge (RAG)
+## 🧠 Step 5: Demo Scenario — Messy User Input (Realism)
 
-This shows that the bot can answer general medical questions, not just symptom-checking.
+This scenario shows the system handles **unstructured, informal** input — not just clean textbook symptoms.
 
 **You type:**
 ```
-What is diabetes and how does it affect the body?
+I feel weird... like tired and dizzy but also kinda anxious idk
 ```
 
 **What to expect:**
-- A well-structured educational explanation
-- Information retrieved from the medical knowledge base (MedQuad/MedMCQA)
-- Source citations
+- The bot still responds with structured screening questions
+- It asks about onset, duration, and severity — even though the input was vague
+- It does NOT guess or diagnose from ambiguous input
 
-**You type next:**
-```
-What are the early warning signs of kidney disease?
-```
-
-**What to expect:**
-- Another grounded, cited response
-- Shows breadth of the knowledge base
+**What to point out:**
+> "Real users don't speak in textbook symptoms. The triage pipeline handles messy, informal language by falling back to its structured screening phase. It asks the same targeted questions regardless of how the input is phrased — this is what makes it robust for real-world use."
 
 ---
 
-## 🧪 Step 6 (Optional): Show the Tests
+## 📈 Step 6: Demo Scenario — History-Aware Risk Escalation
+
+This scenario demonstrates that **critical symptoms from earlier turns are never forgotten**.
+
+### Turn 1 — Mention a high-risk symptom casually
+
+**You type:**
+```
+I had chest pain yesterday
+```
+
+**What to expect:**
+- ⚠️ **URGENT** banner appears immediately (chest pain = 3 points)
+- The bot flags this as needing evaluation
+
+### Turn 2 — Follow up with new symptoms
+
+**You type:**
+```
+Now I just feel dizzy and weak
+```
+
+**What to expect:**
+- The risk level stays **URGENT** — even though this message alone would be ROUTINE
+- The system remembers "chest pain" from Turn 1 and keeps the elevated risk
+
+**What to point out:**
+> "The risk engine scans the entire conversation history, not just the latest message. A critical symptom mentioned in Turn 1 is never forgotten — it stays in the risk calculation for every subsequent turn. This prevents dangerous underestimation when a user casually mentions a red flag early and then moves on."
+
+---
+
+## 🔍 Step 7: Demo Scenario — General Medical Knowledge (RAG)
+
+This shows that the bot can perform medical reasoning based on its knowledge base, not just simple symptom-checking or generic definition retrieval.
+
+**You type:**
+```
+What causes dizziness in anemia?
+```
+
+**What to expect:**
+- A well-structured educational explanation linking the physiological mechanisms (reduced oxygen transport) to the symptom (dizziness)
+- Information retrieved from the medical knowledge base
+- Source citations
+
+**What to point out:**
+> "Notice how the system doesn't just give a Wikipedia definition. It uses retrieved medical documents to reason about the physiological connection between a condition and a specific symptom, showcasing grounded reasoning based on retrieved medical context."
+
+---
+
+## 🛡️ Step 8: Demo Scenario — Error Recovery & Resilience
+
+This scenario demonstrates how the system handles critical infrastructure failures.
+
+**Simulation:**
+*(Explain what happens if the Ollama server crashes or becomes unavailable)*
+
+**What to point out:**
+> "We built targeted error handling around the LLM inference. If the model goes down or times out, the system doesn't crash. It catches the `ConnectionError` and provides a graceful, pre-programmed safe fallback response, ensuring the user is never left hanging."
+
+---
+
+## 🧪 Step 9 (Optional): Show the Tests
 
 If the professor asks about testing:
 
 ```bash
-pytest tests/
+pytest tests/ -q
 ```
 
-This runs unit tests covering:
-- Emergency keyword detection
-- Text normalization
-- Source citation formatting
-- Safety filters
+**What to expect:**
+- You will see over **340 tests (342 passing)** run in just a few seconds.
+
+**What to point out:**
+> "Beyond standard unit tests, we designed **10 clinical evaluation scenarios** that simulate real patient cases — including emergency detection, Arabic language inputs, negated symptom handling, history-aware risk escalation, over-reassurance correction, and incomplete information handling. These verify the system is safe from a medical perspective, not just functionally correct."
 
 ---
 
-## 📊 Step 7 (Optional): Show Evaluation Metrics
+## 📊 Step 10 (Optional): Show Evaluation Metrics
 
 ```bash
 python scripts/evaluate_rag.py --retrieval
@@ -166,12 +228,16 @@ This shows quantitative metrics:
 
 | Feature | What to Say |
 |---------|-------------|
-| **RAG** | "We use Retrieval-Augmented Generation — the LLM doesn't make up answers, it references a curated medical knowledge base" |
-| **Safety** | "Emergency detection is deterministic, not AI-based — it can never fail due to hallucination" |
-| **Privacy** | "Everything runs locally — no patient data leaves the machine. Ollama runs the LLM on localhost" |
-| **Multi-turn** | "The system remembers context across turns, mimicking a doctor's interview process" |
-| **Sources** | "Every response includes citations from the knowledge base for traceability" |
-| **Evaluation** | "We have a quantitative evaluation pipeline that measures retrieval quality and triage accuracy" |
+| **Structured Triage** | "The system uses a 4-phase triage pipeline: initial screening, characterization, assessment, and an urgent fast-track. Phase transitions are driven by sufficiency markers, not just turn count." |
+| **RAG & Context** | "We use RAG with smart sentence-boundary truncation and history-aware retrieval — the system anchors on the original symptom description even in long conversations." |
+| **Safety** | "Emergency detection is deterministic, not AI-based — it can never fail due to hallucination. Red-flag screening is required for a full-confidence differential; if the user hasn't addressed red flags, the system injects a deterministic safety notice that the AI cannot skip." |
+| **History-Aware Risk** | "The risk engine scans the entire conversation, not just the last message. A critical symptom from Turn 1 stays in the risk calculation forever." |
+| **Over-Reassurance Guard** | "Even if the model generates dismissive language like 'nothing to worry about', a deterministic post-processing layer corrects it to safer phrasing." |
+| **Resilience** | "The system features targeted LLM error recovery and degrades gracefully to a safe, non-diagnostic fallback if the model crashes." |
+| **Privacy** | "Everything runs locally — no patient data leaves the machine. Ollama runs the LLM on localhost." |
+| **Multi-turn** | "The system remembers context across turns and tells the LLM exactly which information is still missing, mimicking a structured clinical interview." |
+| **Testing** | "We have 342 passing tests, including 10 clinical evaluation scenarios that verify medical safety, not just code correctness." |
+| **Architecture** | "This system is designed to be safe by architecture, not by prompt — critical decisions like emergency detection and red-flag enforcement are deterministic and cannot be overridden by the language model." |
 
 ---
 

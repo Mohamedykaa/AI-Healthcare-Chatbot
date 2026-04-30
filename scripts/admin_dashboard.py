@@ -24,6 +24,9 @@ import requests
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT_DIR)
 
+from dotenv import load_dotenv
+load_dotenv()
+
 import streamlit as st
 
 # ---------------------------------------------------------------------------
@@ -112,7 +115,8 @@ def page_system_health():
     # --- ChromaDB ---
     with col2:
         st.subheader("📦 ChromaDB")
-        chroma_dir = os.path.join(ROOT_DIR, "chroma_db")
+        from src.core.config import CHROMA_PERSIST_DIR
+        chroma_dir = os.path.join(ROOT_DIR, CHROMA_PERSIST_DIR) if not os.path.isabs(CHROMA_PERSIST_DIR) else CHROMA_PERSIST_DIR
         if os.path.exists(chroma_dir):
             st.markdown('<span class="status-ok">● EXISTS</span>', unsafe_allow_html=True)
             # Try to load and count

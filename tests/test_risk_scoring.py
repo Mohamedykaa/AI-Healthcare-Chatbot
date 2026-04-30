@@ -57,3 +57,13 @@ def test_compatibility_helper_matches_emergency_assessment():
 def test_mixed_case_complex_transition_to_emergency():
     text = "I had Mild Chest Pain yesterday, but now I have SHORTNESS OF BREATH and cold sweating!!!"
     assert assess_risk_level(text) == "EMERGENCY"
+
+
+def test_arabic_chest_pain_with_red_flags_is_emergency():
+    text = "لدي ألم في الصدر مع ضيق تنفس وتعرق بارد"
+    assert assess_risk_level(text) == "EMERGENCY"
+
+
+def test_arabic_mild_pressing_chest_pain_is_routine():
+    text = "لدي ألم في الصدر خفيف وعند الضغط فقط"
+    assert assess_risk_level(text) == "ROUTINE"

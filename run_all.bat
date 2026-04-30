@@ -7,13 +7,25 @@ pip install -r requirements_chainlit.txt
 if errorlevel 1 exit /b 1
 
 echo.
-echo Ingesting medical data (first time only; skip if chroma_db already exists)...
-python scripts/ingest_data.py
-if errorlevel 1 (
-    echo Ingest failed. If chroma_db exists, you can continue.
-    pause
+REM Gate on all 3 knowledge files — ingestion creates these, not the ChromaDB
+if exist data\medical_knowledge_medquad.txt (
+    if exist data\medical_knowledge_medmcqa.txt (
+        if exist data\medical_knowledge_public_health.txt (
+            echo Found all knowledge files. Skipping ingestion.
+            goto start_app
+        )
+    )
 )
 
+echo Ingesting medical data for the first run...
+python scripts/ingest_data.py
+if errorlevel 1 (
+    echo Ingest failed. Check the output above.
+    pause
+    exit /b 1
+)
+
+:start_app
 echo.
 echo Starting Chainlit chatbot at http://localhost:8000 ...
 python run_app.py

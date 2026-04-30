@@ -12,18 +12,26 @@ Author: AI Healthcare Assistant Team
 import os
 import re
 import shutil
+import sys
 from typing import Optional
 
 from datasets import load_dataset
+from dotenv import load_dotenv
 from tqdm import tqdm
+
+# Ensure project root is importable
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT_DIR)
+
+# Load .env so CHROMA_PERSIST_DIR override is respected
+load_dotenv()
+
+from src.core.config import CHROMA_PERSIST_DIR
 
 
 # ============================================================
 # CONFIGURATION
 # ============================================================
-
-# Resolve project root (one level up from scripts/)
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 OUTPUT_FILES = [
     os.path.join(ROOT_DIR, "data", "medical_knowledge_medquad.txt"),
@@ -31,9 +39,9 @@ OUTPUT_FILES = [
     os.path.join(ROOT_DIR, "data", "medical_knowledge_public_health.txt"),
 ]
 
+# Clean the active Chroma DB so the next app start rebuilds it from fresh data
 VECTOR_DB_DIRS = [
-    os.path.join(ROOT_DIR, "chroma_db"),
-    os.path.join(ROOT_DIR, "chroma_db_medical"),
+    os.path.join(ROOT_DIR, CHROMA_PERSIST_DIR) if not os.path.isabs(CHROMA_PERSIST_DIR) else CHROMA_PERSIST_DIR,
 ]
 
 # Forbidden keywords for safety filtering (case-insensitive)

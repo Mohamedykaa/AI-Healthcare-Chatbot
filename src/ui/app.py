@@ -11,17 +11,15 @@ A fully offline medical chatbot using:
 Entry point: chainlit run src/ui/app.py
 """
 
-
 from dotenv import load_dotenv
 import chainlit as cl
-from langchain_core.messages import HumanMessage, AIMessage
+from langchain_core.messages import AIMessage, HumanMessage
 
-# Import core logic
 from src.core.logic import (
+    get_preliminary_disclaimer,
     initialize_components,
-    process_chat_message
+    process_chat_message,
 )
-
 
 # Load environment variables
 load_dotenv()
@@ -30,6 +28,7 @@ load_dotenv()
 # CHAINLIT HANDLERS
 # ============================================================
 
+
 @cl.on_chat_start
 async def on_chat_start():
     """
@@ -37,7 +36,7 @@ async def on_chat_start():
     Called when a new user session starts.
     """
     await cl.Message(content="🏥 Initializing Medical Chatbot... Please wait.").send()
-    
+
     try:
         # Initialize shared components lazily
         initialize_components()
@@ -45,7 +44,7 @@ async def on_chat_start():
         # Initialize chat history for this session
         chat_history = []
         cl.user_session.set("chat_history", chat_history)
-        
+
         # Send welcome message
         welcome_message = """# 🏥 Local Medical Chatbot
 
@@ -68,7 +67,7 @@ If you're experiencing a medical emergency, please call emergency services (911/
 **How can I help you today?**
 """
         await cl.Message(content=welcome_message).send()
-        
+
     except Exception as e:
         await cl.Message(content=f"❌ **Initialization Error:** {str(e)}").send()
 
@@ -80,40 +79,38 @@ async def on_message(message: cl.Message):
     Processes through RAG chain and returns response with sources.
     """
     user_input = message.content
-    
+
     # Get session data
     chat_history = cl.user_session.get("chat_history")
-    
+
     if chat_history is None:
-        await cl.Message(
-            content="⚠️ Session not initialized. Please refresh the page."
-        ).send()
+        await cl.Message(content="⚠️ Session not initialized. Please refresh the page.").send()
         return
-    
+
     # Send thinking indicator
     msg = cl.Message(content="")
     await msg.send()
-    
+
     try:
         # Process message using core backend logic
         response_text, risk_level, sources_text = await process_chat_message(user_input, chat_history)
-        
+
         # Append disclaimer
         full_response = response_text + sources_text
         if risk_level != "EMERGENCY":
-            full_response += "\n\n---\n*⚕️ This is a preliminary educational assessment only. Please consult a healthcare professional for proper diagnosis and treatment.*"
-        
+            full_response += get_preliminary_disclaimer(user_input)
+
         # Update message
         msg.content = full_response
         await msg.update()
-        
+
         # Update chat history
         chat_history.append(HumanMessage(content=user_input))
         chat_history.append(AIMessage(content=response_text))
         if len(chat_history) > 16:
             chat_history = chat_history[-16:]
         cl.user_session.set("chat_history", chat_history)
-        
+
     except Exception as e:
         await cl.Message(content=f"❌ **Error:** {str(e)}\n\nPlease try again.").send()
 

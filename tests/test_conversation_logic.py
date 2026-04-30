@@ -95,21 +95,70 @@ class TestTurnCount:
 # PHASE DECISION
 # ===========================================================================
 
-class TestPhaseDecision:
-    """First turn vs follow-up decision boundary."""
+class TestTriagePhaseDetection:
+    """Phase detection imported from production — no logic duplication."""
 
-    def test_empty_history_is_first_turn(self):
-        assert is_first_turn([]) is True
+    def test_empty_history_routine_is_initial_screening(self):
+        from src.core.logic import _detect_triage_phase
+        assert _detect_triage_phase([], "ROUTINE") == "INITIAL_SCREENING"
 
-    def test_single_message_is_still_first_turn(self):
-        # Only one message (human, no AI reply yet) → turn 0
-        assert is_first_turn(["human_msg"]) is True
+    def test_one_exchange_insufficient_is_characterization(self):
+        from src.core.logic import _detect_triage_phase
+        from langchain_core.messages import HumanMessage, AIMessage
+        history = [HumanMessage(content="headache"), AIMessage(content="How long?")]
+        assert _detect_triage_phase(history, "ROUTINE") == "CHARACTERIZATION"
 
-    def test_one_exchange_is_follow_up(self):
-        assert is_first_turn(["human", "ai"]) is False
+    def test_sufficient_info_early_allows_differential(self):
+        from src.core.logic import _detect_triage_phase
+        from langchain_core.messages import HumanMessage, AIMessage
+        history = [
+            HumanMessage(content="headache for 2 weeks, 8/10 severity"),
+            AIMessage(content="Any red flags?"),
+            HumanMessage(content="No loss of consciousness, poor sleep and stress"),
+            AIMessage(content="..."),
+        ]
+        assert _detect_triage_phase(history, "ROUTINE") == "DIFFERENTIAL"
 
-    def test_many_exchanges_is_follow_up(self):
-        assert is_first_turn(["msg"] * 10) is False
+    def test_insufficient_info_late_stays_characterization(self):
+        from src.core.logic import _detect_triage_phase
+        from langchain_core.messages import HumanMessage, AIMessage
+        history = [
+            HumanMessage(content="I feel bad"),
+            AIMessage(content="Can you tell me more?"),
+            HumanMessage(content="just bad"),
+            AIMessage(content="How long?"),
+        ]
+        assert _detect_triage_phase(history, "ROUTINE") == "CHARACTERIZATION"
+
+    def test_four_turns_insufficient_forces_differential_incomplete(self):
+        from src.core.logic import _detect_triage_phase
+        from langchain_core.messages import HumanMessage, AIMessage
+        history = [
+            HumanMessage(content="bad"), AIMessage(content="?"),
+            HumanMessage(content="bad"), AIMessage(content="?"),
+            HumanMessage(content="bad"), AIMessage(content="?"),
+            HumanMessage(content="bad"), AIMessage(content="?"),
+        ]
+        assert _detect_triage_phase(history, "ROUTINE") == "DIFFERENTIAL_INCOMPLETE"
+
+    def test_urgent_always_overrides_phase(self):
+        from src.core.logic import _detect_triage_phase
+        assert _detect_triage_phase([], "URGENT") == "URGENT_ASSESSMENT"
+
+    def test_urgent_overrides_even_with_history(self):
+        from src.core.logic import _detect_triage_phase
+        from langchain_core.messages import HumanMessage, AIMessage
+        history = [HumanMessage(content="q"), AIMessage(content="a")] * 5
+        assert _detect_triage_phase(history, "URGENT") == "URGENT_ASSESSMENT"
+
+    def test_first_turn_rich_input_skips_screening(self):
+        """A first message with all markers met should go straight to DIFFERENTIAL."""
+        from src.core.logic import _detect_triage_phase
+        rich_input = (
+            "Severe headache for 2 weeks, 8/10, can't work, "
+            "no loss of consciousness, poor sleep and stress"
+        )
+        assert _detect_triage_phase([], "ROUTINE", rich_input) == "DIFFERENTIAL"
 
 
 # ===========================================================================

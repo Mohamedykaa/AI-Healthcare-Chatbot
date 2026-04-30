@@ -20,7 +20,7 @@ huggingface-hub==0.21.4
 # Ollama integration (included in langchain-community, but explicit for clarity)
 # Note: Requires Ollama to be installed and running locally
 # Install Ollama from: https://ollama.ai/
-# Pull model: ollama pull biomistral
+# Pull model: ollama pull llama3:8b
 
 # Additional dependencies
 python-dotenv>=1.0.0

@@ -50,6 +50,9 @@ class TestEmergencyEdgeCases:
     def test_substring_stroke_in_stroked_is_not_emergency(self):
         assert check_for_emergency("I stroked the cat") is False
 
+    def test_arabic_emergency_phrase_triggers(self):
+        assert check_for_emergency("أشعر بأفكار انتحارية") is True
+
 
 class TestEmergencyResponseContent:
     @pytest.fixture(autouse=True)
@@ -72,3 +75,7 @@ class TestEmergencyResponseContent:
     def test_is_nonempty_string(self):
         assert isinstance(self.response, str)
         assert len(self.response) > 100
+
+    def test_arabic_response_available(self):
+        response = get_emergency_response("ألم شديد في الصدر مع ضيق تنفس")
+        assert "تنبيه طارئ" in response

@@ -4,6 +4,7 @@ import os
 # CONFIGURATION
 # ============================================================
 
+LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO")
 CHROMA_PERSIST_DIR = os.environ.get("CHROMA_PERSIST_DIR", "./chroma_db")
 MEDICAL_KNOWLEDGE_FILES = [
     "data/medical_knowledge_medquad.txt",

@@ -1,189 +1,148 @@
 # API Documentation
 
-## Available FastAPI Endpoints
+## REST API (`src/api/main.py`)
 
-This project contains **TWO separate FastAPI applications**:
+A FastAPI server exposing the medical chatbot as a REST API.
+This is the **headless** interface — use it for programmatic access, mobile integrations (e.g. Flutter), or when you don't need the Chainlit UI.
 
-### 1. Primary API: `src/api/main.py`
-**Purpose**: Modern, agent-based API using DiagnosisAgent architecture  
-**Recommended for**: Production use, new integrations
+### Start the server
 
-**Start server:**
 ```bash
-uvicorn src.api.main:app --reload --host 0.0.0.0 --port 8000
+pip install -r requirements_api.txt    # if not already installed
+python run_api.py
+# OR
+uvicorn src.api.main:app --host 0.0.0.0 --port 8001
 ```
 
-**Endpoints:**
+The API will be available at `http://localhost:8001`.
 
-#### `GET /`
-Health check endpoint
-- Returns API status and available endpoints
-
-#### `POST /predict`
-Upload skin lesion image for classification
-- **Request**: Multipart form data with image file
-- **Response**: 
-  ```json
-  {
-    "filename": "image.jpg",
-    "prediction": "Melanoma",
-    "confidence": 0.85,
-    "probabilities": {"Melanoma": 0.85, "Benign": 0.15},
-    "disclaimer": "..."
-  }
-  ```
-
-#### `POST /predict_v2`
-Symptom-based disease prediction with follow-up questions
-- **Request**:
-  ```json
-  {
-    "text": "I have a fever and headache",
-    "top_k": 3,
-    "follow_up_answers": {
-      "q_malaria_fever_1": "yes"
-    }
-  }
-  ```
-- **Response**:
-  ```json
-  {
-    "predictions": [
-      {
-        "disease": "Malaria",
-        "probability": 0.85,
-        "follow_up_questions": [...]
-      }
-    ]
-  }
-  ```
+> **Note:** Chainlit runs on port 8000, the API runs on port 8001. Both share the same backend logic in `src/core/logic.py`.
 
 ---
 
-### 2. Legacy API: `src/main.py`
-**Purpose**: Hybrid NLP+Rule-based prediction engine  
-**Note**: Consider migrating to `src/api/main.py` for new projects
+## Endpoints
 
-**Start server:**
-```bash
-uvicorn src.main:app --reload --host 0.0.0.0 --port 8001
+### `GET /health`
+
+Health check endpoint.
+
+**Response:**
+```json
+{
+  "status": "ok"
+}
 ```
-
-**Endpoints:**
-
-#### `POST /predict` (v1)
-Basic symptom prediction
-
-#### `POST /predict_v2` (v2)
-Enhanced prediction with knowledge base rules
-
-#### `POST /predict_skin`
-Skin lesion classification
 
 ---
 
-## Using the API
+### `POST /chat`
 
-### Python Example:
+Send a user message through the RAG pipeline and receive the chatbot's response.
+
+**Request body:**
+```json
+{
+  "message": "I have a headache and feel dizzy",
+  "history": [
+    { "role": "user", "content": "I have been feeling tired" },
+    { "role": "assistant", "content": "I understand you're feeling tired..." }
+  ]
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `message` | `string` | Yes | The user's current message |
+| `history` | `list[ChatMsg]` | No | Previous conversation turns (default: `[]`) |
+
+Each `ChatMsg` has:
+| Field | Type | Description |
+|-------|------|-------------|
+| `role` | `"user"` \| `"assistant"` | One of exactly `"user"` or `"assistant"` (validated; other values return 422) |
+| `content` | `string` | The message content |
+
+**Response:**
+```json
+{
+  "response": "Based on your symptoms, this pattern could be consistent with...",
+  "risk_level": "ROUTINE",
+  "sources": "\n\n---\n**📚 References:** medical_knowledge_medquad.txt"
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `response` | `string` | The chatbot's answer (may include urgent prefix for URGENT risk) |
+| `risk_level` | `string` | `"ROUTINE"`, `"URGENT"`, or `"EMERGENCY"` |
+| `sources` | `string` | Source citations (empty string if no sources retrieved) |
+
+**Risk level behavior:**
+- `ROUTINE` — Normal RAG pipeline response
+- `URGENT` — Response is prefixed with an urgent warning banner
+- `EMERGENCY` — LLM is **not called**; a deterministic safety response is returned immediately
+
+**Error response (500):**
+```json
+{
+  "detail": "An internal error occurred. Please try again."
+}
+```
+
+> **Note:** For security, the API returns a generic error message. Detailed errors are logged server-side only.
+
+---
+
+## Usage Examples
+
+### Python
 ```python
 import requests
 
-# Symptom prediction
-response = requests.post(
-    "http://localhost:8000/predict_v2",
-    json={
-        "text": "I have persistent cough and fever",
-        "top_k": 3
-    }
-)
-print(response.json())
+# First message
+response = requests.post("http://localhost:8001/chat", json={
+    "message": "I have been feeling very tired with frequent headaches",
+    "history": []
+})
+data = response.json()
+print(data["response"])
+print(data["risk_level"])
 
-# Image classification
-files = {'file': open('skin_lesion.jpg', 'rb')}
-response = requests.post(
-    "http://localhost:8000/predict",
-    files=files
-)
-print(response.json())
+# Follow-up (with history)
+response2 = requests.post("http://localhost:8001/chat", json={
+    "message": "Yes, I also feel cold all the time",
+    "history": [
+        {"role": "user", "content": "I have been feeling very tired with frequent headaches"},
+        {"role": "assistant", "content": data["response"]}
+    ]
+})
+print(response2.json()["response"])
 ```
 
-### cURL Example:
+### cURL
 ```bash
-# Symptom prediction
-curl -X POST "http://localhost:8000/predict_v2" \
+# Simple message
+curl -X POST "http://localhost:8001/chat" \
   -H "Content-Type: application/json" \
-  -d '{"text":"I have a headache and nausea","top_k":3}'
+  -d '{"message": "What are the symptoms of diabetes?", "history": []}'
 
-# Image upload
-curl -X POST "http://localhost:8000/predict" \
-  -F "file=@path/to/image.jpg"
+# Health check
+curl http://localhost:8001/health
 ```
 
 ---
 
-## Streamlit UI
+## CORS
 
-The Streamlit interface provides a user-friendly way to interact with all features.
-
-**Start Streamlit:**
-```bash
-streamlit run src/app_streamlit.py
-```
-
-The UI includes:
-- 🏠 **Chatbot**: Interactive symptom-based diagnosis
-- 🔬 **Skin Lesion Classifier**: Upload and analyze images
-- 📜 **History**: View past conversations
-- ⚙️ **Settings**: Configure language and preferences
+CORS is enabled with `allow_origins=["*"]` for development. In production, restrict this to specific origins.
 
 ---
 
-## Configuration
+## Architecture
 
-### Environment Variables
-Copy `.env.example` to `.env` and customize:
-```bash
-cp .env.example .env
+The API shares the same backend as the Chainlit UI:
+
+```
+run_api.py → src/api/main.py → src/core/logic.py → (risk.py, llm.py, vectorstore.py)
 ```
 
-### Centralized Configuration
-All paths are defined in `src/config.py`:
-```python
-from src.config import PROJECT_ROOT, DATA_DIR, MODELS_DIR
-```
-
----
-
-## Deployment Notes
-
-1. **Production Setup**: Use `uvicorn` with multiple workers
-   ```bash
-   uvicorn src.api.main:app --workers 4 --host 0.0.0.0 --port 8000
-   ```
-
-2. **CORS Configuration**: Add CORS middleware if serving web clients
-   ```python
-   from fastapi.middleware.cors import CORSMiddleware
-   app.add_middleware(CORSMiddleware, allow_origins=["*"])
-   ```
-
-3. **SSL/HTTPS**: Use nginx or a reverse proxy for SSL termination
-
-4. **Rate Limiting**: Consider implementing rate limiting for production
-
----
-
-## Troubleshooting
-
-### Model Not Found
-- Ensure models are trained: `python src/train_model.py`
-- Check paths in `src/config.py`
-
-### Import Errors
-- Verify virtual environment is activated
-- Reinstall dependencies: `pip install -r requirements.txt`
-
-### API Connection Refused
-- Check if server is running
-- Verify port is not in use
-- Check firewall settings
+Both entry points call `process_chat_message()` from `src/core/logic.py`, ensuring identical behavior regardless of interface.

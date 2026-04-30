@@ -7,12 +7,24 @@ venv_gpu/
 .git/
 .gitignore
 
-# Runtime-generated stores (rebuilt inside container if needed)
+# Runtime-generated vector stores (rebuilt inside container if needed)
 chroma_db/
+chroma_db_v2/
+chroma_db_backup/
 chroma_db_medical/
 
 # Archive (legacy, not needed at runtime)
 archive/
+
+# Tunneling tools
+bore/
+bore.zip
+ngrok_bin/
+ngrok.zip
+*.zip
+
+# Empty asset dir
+public/
 
 # Caches
 __pycache__/
@@ -26,6 +38,7 @@ logs/
 # IDE
 .vscode/
 .idea/
+.sixth/
 
 # OS
 .DS_Store
@@ -39,3 +52,6 @@ docs/
 
 # Tests (not needed in production image)
 tests/
+
+# Session data
+.files/
