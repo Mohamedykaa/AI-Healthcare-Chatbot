@@ -21,7 +21,7 @@
 | **LLM** | LLaMA 3 8B (ChatOllama, local) |
 | **Embeddings** | all-MiniLM-L6-v2 (HuggingFace, CPU) |
 | **Vector Store** | ChromaDB (persistent, local) |
-| **RAG Framework** | LangChain (retrieval + generation) |
+| **RAG Framework** | LangChain utilities + custom retrieval orchestration |
 | **Data Sources** | MedQuad, MedMCQA, Medical Meadow WikiDoc |
 
 **Key features:**
@@ -110,7 +110,7 @@ pytest tests/
 Quantitatively measure the quality of the RAG pipeline:
 
 ```bash
-# Full evaluation (retrieval + triage + answer faithfulness)
+# Full evaluation (retrieval + triage)
 python scripts/evaluate_rag.py
 
 # Retrieval-only mode (no LLM needed)
@@ -120,7 +120,6 @@ python scripts/evaluate_rag.py --retrieval
 Metrics measured:
 - **Triage Accuracy** — Deterministic emergency/urgent/routine classification against gold labels
 - **Retrieval Hit Rate** — Percentage of questions where relevant documents are successfully retrieved
-- **Answer Faithfulness** — Whether LLM answers reference retrieved context (not hallucinated)
 
 Results are saved to `evaluation_results.json`.
 
@@ -200,7 +199,7 @@ As an educational and research-oriented medical decision-support prototype, this
 
 ## 📂 Archived Architecture (Reference Only)
 
-The original production-grade microservices design is preserved externally in `d:\disease_prediction_project_archive`:
+The previously explored microservices architecture is preserved externally in `d:\disease_prediction_project_archive`:
 
 - **Gateway**: Nginx + ModSecurity WAF + OWASP CRS (SSL/TLS)
 - **Frontend**: Streamlit (Polling Architecture)
@@ -214,5 +213,3 @@ The original production-grade microservices design is preserved externally in `d
 ## 👨‍💻 Credits
 
 Developed by Mohamed Yaser | 2026
-
-⭐ If you found this project useful, consider giving it a star on GitHub!
