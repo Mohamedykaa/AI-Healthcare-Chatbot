@@ -4,7 +4,7 @@
 >
 > This project has undergone an architectural evolution. The original
 > microservices stack (FastAPI, Celery, Redis, Nginx WAF, Docker Compose)
-> has been archived externally (see `d:\disease_prediction_project_archive`).
+> has been archived externally (refer to the external project archive).
 >
 > The **active, safety-oriented educational prototype** is a self-contained
 > **Chainlit-based RAG chatbot** powered by LLaMA 3 (via Ollama),
@@ -199,7 +199,7 @@ As an educational and research-oriented medical decision-support prototype, this
 
 ## 📂 Archived Architecture (Reference Only)
 
-The previously explored microservices architecture is preserved externally in `d:\disease_prediction_project_archive`:
+The previously explored microservices architecture is preserved in the external project archive:
 
 - **Gateway**: Nginx + ModSecurity WAF + OWASP CRS (SSL/TLS)
 - **Frontend**: Streamlit (Polling Architecture)
