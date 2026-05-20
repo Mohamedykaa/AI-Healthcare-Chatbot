@@ -1,7 +1,16 @@
 # AI Healthcare Chatbot - وثيقة التحضير للمناقشة
 ## Viva Defense Preparation Document
 
-> **Note:** This document describes the **archived** multi-agent architecture (Streamlit, SymptomAgent, DiagnosisAgent, etc.). The **current production system** is the Chainlit-based RAG chatbot (LLaMA 3 via Ollama, ChromaDB, HuggingFace embeddings). For the active architecture, see the [README](../../README.md) and [ARCHITECTURE_WALKTHROUGH.md](../ARCHITECTURE_WALKTHROUGH.md). The active code is located in the `src/` directory.
+> [!WARNING]
+> **ملف إرشادي مرجعي داخلي فقط (مؤرشف) — INTERNAL LEGACY ARCHIVE REFERENCE ONLY**
+>
+> هذا المستند يصف المعمارية البرمجية السابقة والمؤرشفة (Streamlit, SymptomAgent, DiagnosisAgent, EfficientNet) والتي **تم إيقاف تشغيلها بالكامل وإلغاؤها واستبدالها بنظام الـ RAG النشط والوحيد حالياً** (Chainlit-based RAG chatbot, LLaMA 3, ChromaDB).
+> 
+> **⚠️ تنبيه هام:** لا ترسل أو تقدم هذا المستند مع ملفات تسليم المشروع الأساسية لتفادي التسبب في أي ارتباك لدى الدكاترة في لجنة المناقشة. لتفاصيل معمارية النظام الحالي والنشط حالياً، راجع الأدلة المعتمدة التالية فقط:
+> * [دليل البنية الهيكلية المعتمد (Architecture Walkthrough)](../ARCHITECTURE_WALKTHROUGH.md)
+> * [ملف التعريف والتشغيل الرئيسي (README.md)](../../README.md)
+> 
+> جميع الملفات والأكواد البرمجية الفعّالة والنظام النشط حالياً تقع في المسار `src/` فقط.
 
 ---
 

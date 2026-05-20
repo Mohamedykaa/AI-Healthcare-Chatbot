@@ -57,33 +57,39 @@ flowchart TB
 User Input -> Chainlit on_message() or POST /chat
                     |
                     v
-          1. assess_risk_level(history + user_input)
+          1. Check is_prompt_injection(user_input)
                     |
          +----------+-----------+
          |                      |
-         | EMERGENCY            | URGENT / ROUTINE
+         | Yes (Jailbreak)      | No (Safe query)
          v                      v
- get_emergency_response()   2. Load conversation history
+ get_injection_refusal()  2. assess_risk_level(history + user_input)
          |                      |
-         |                      v
-         |             3. Retrieve documents with
-         |                vectorstore.as_retriever()
-         |                      |
-         |                      v
-         |             4. Build guarded system prompt
-         |                + turn strategy + history
-         |                      |
-         |                      v
-         |             5. await llm.ainvoke(messages)
-         |                      |
-         |                      v
-         |             6. Apply fallback & over-reassurance guardrails
-         |                + inject deterministic safety notices
-         |                + format_sources(docs)
-         |                      |
-         +----------------------+ 
+         |            +---------+---------+
+         |            |                   |
+         |            | EMERGENCY         | URGENT / ROUTINE
+         |            v                   v
+         |    get_emergency_response() 3. Load conversation history
+         |            |                   |
+         |            |                   v
+         |            |                4. Retrieve documents with
+         |            |                   vectorstore.as_retriever()
+         |            |                   |
+         |            |                   v
+         |            |                5. Build guarded system prompt
+         |            |                   + turn strategy + history
+         |            |                   |
+         |            |                   v
+         |            |                6. await llm.ainvoke(messages)
+         |            |                   |
+         |            |                   v
+         |            |                7. Apply fallback & over-reassurance
+         |            |                   + inject safety notices & sources
+         |            |                   |
+         +------------+-------------------+ 
+                                |
                                 v
-                     7. Return response to UI / API
+                     8. Return response to UI / API
 ```
 
 ---
@@ -113,15 +119,21 @@ This is the active orchestration layer for the chatbot.
 **Important functions:**
 - `initialize_components()` loads the embedding function, vectorstore, and LLM singletons
 - `process_chat_message()` performs triage, retrieval, prompt construction, LLM invocation, fallback handling, and source formatting
+- `is_prompt_injection()` and `get_injection_refusal()` serve as an input security layer, instantly refusing malicious commands or illicit drug prescription requests
+- `get_user_language()` and `contains_arabic()` automatically detect the input language to route queries
 - `_detect_triage_phase()` categorizes the conversation into one of four phases (`INITIAL_SCREENING`, `CHARACTERIZATION`, `DIFFERENTIAL`, `URGENT_ASSESSMENT`)
-- `_check_sufficiency()` uses regex to detect if onset, severity, red-flags, and context have been addressed
-- `get_triage_strategy()` adapts the system prompt to force the LLM to ask targeted questions about missing sufficiency markers
+- `_check_sufficiency()` uses regex to detect if onset, severity, red-flags, and context have been addressed in both English and Arabic
+- `get_triage_strategy()` adapts the system prompt to force the LLM to ask targeted questions about missing sufficiency markers using appropriate localized instructions
 - `build_medical_context_section()` keeps retrieved context compact and sentence-safe
 - `format_sources()` converts retrieved document metadata into a citation string
 
-**Deterministic Safety Injection:**
-- If the conversation reaches the `DIFFERENTIAL` phase but the user never explicitly addressed red flags, the system *deterministically* injects a safety notice into the final LLM response.
-- An **Over-Reassurance Guard** scans the final LLM output for dismissive phrases (e.g., "nothing to worry about") and replaces them with professional, cautious alternatives.
+**🌐 Multilingual Support & Routing:**
+- If the input is in Arabic, the system dynamically switches prompts to localized Arabic templates (e.g., `_ARABIC_SYSTEM_PROMPT_TEMPLATE`, `_ARABIC_INITIAL_SCREENING_PROMPT`, etc.) to support conversational interactions.
+- The RAG pipeline processes symptoms, references, disclaimers, and urgent/emergency responses in Modern Standard Arabic, utilizing language-aware routing to minimize broken translations.
+
+**🛡️ Deterministic Safety Injection:**
+- If the conversation reaches the `DIFFERENTIAL` phase but the user never explicitly addressed red flags, the system *deterministically* injects a safety notice into the final LLM response (supporting both English and Arabic).
+- An **Over-Reassurance Guard** scans the final LLM output for dismissive phrases (e.g., "nothing to worry about" or "لا داعي للقلق") and replaces them with professional, cautious alternatives.
 
 **Key design choice:**
 - The project uses **manual retrieval and prompt assembly**, not a LangChain retrieval chain at runtime
@@ -278,6 +290,28 @@ The active codebase uses **manual retrieval only**. [src/core/logic.py](../src/c
 | **Reason** | N/A | Better control over prompting, fallback behavior, and local-model guardrails |
 
 This is a deliberate choice: the local 8B model benefits from tighter prompt control and explicit echo/fallback protections.
+
+---
+
+## 💡 Known Limitations
+
+As an educational and research-oriented medical decision-support prototype, this system has several documented boundaries:
+
+1. **Arabic Dialect & Colloquial Support:**
+   - Arabic conversational support is optimized for Modern Standard Arabic (MSA) clinical templates. 
+   - Regional Arabic colloquial dialects are currently under ongoing iterative improvement and may not achieve the same precision in symptom matching.
+
+2. **Scope of Knowledge Base:**
+   - Retrieval quality is heavily dependent on the curated corpus (`medical_knowledge_medquad.txt` and `medical_knowledge_medmcqa.txt`). 
+   - If a symptom or disease is completely absent from the ingested context, the RAG retriever cannot locate it, and the system relies entirely on generalized clinical fallback instructions.
+
+3. **No Definitive Diagnosis:**
+   - The system is explicitly calibrated for **triage, educational screening, and information routing**, not medical diagnosis. 
+   - It is designed to guide users on when to seek urgent care rather than acting as a definitive clinical authority or an AI doctor.
+
+4. **Resource and Model Limitations:**
+   - Running LLaMA 3 8B locally on CPU may result in increased inference latency. 
+   - The quality of synthesis is bounded by the parameters of the underlying 8B local model.
 
 ---
 

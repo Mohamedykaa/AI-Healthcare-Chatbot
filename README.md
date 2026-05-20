@@ -6,7 +6,7 @@
 > microservices stack (FastAPI, Celery, Redis, Nginx WAF, Docker Compose)
 > has been archived externally (see `d:\disease_prediction_project_archive`).
 >
-> The **active, production-ready implementation** is a self-contained
+> The **active, safety-oriented educational prototype** is a self-contained
 > **Chainlit-based RAG chatbot** powered by LLaMA 3 (via Ollama),
 > HuggingFace embeddings, and ChromaDB. All instructions below apply
 > to this active version.
@@ -89,10 +89,12 @@ docker run -p 8000:8000 -e OLLAMA_BASE_URL=http://host.docker.internal:11434 med
 
 ## 🛡️ Safety Features
 
+- **Prompt Injection Guard** — Blocks malicious instructions and drug prescription requests at input level in both English and Arabic
 - **Emergency detection** — Escalates chest pain, seizures, suicidal ideation, etc.
 - **Content filtering** — Ingestion pipeline strips dosage, prescription, and treatment data
 - **Echo guardrails** — Detects and handles LLM echo/empty responses
 - **Medical disclaimers** — Appended to every response automatically
+
 
 ---
 
@@ -136,6 +138,8 @@ streamlit run scripts/admin_dashboard.py
 - 📚 **Knowledge Base Inspector** — Browse and preview ingested medical data
 - 🚨 **Emergency Detection Tester** — Interactive risk triage classifier
 - 🔍 **RAG Query Runner** — Send test queries through the full pipeline
+- 📊 **RAG Evaluation Metrics** — View quantitative accuracy and retrieval success charts
+
 
 ## Project Integrity Check
 
@@ -169,6 +173,28 @@ The deterministic triage layer is intentionally calibrated to reduce false-posit
 - **Why `EMERGENCY >= 6`?** This avoids escalating a single severe symptom phrase (e.g., severe chest pain) to emergency without additional red flags or critical hard-stop terms.
 - **Why `URGENT >= 3`?** A core symptom can still trigger same-day caution (`URGENT`) without forcing immediate emergency messaging.
 - **Deterministic scope note:** The matcher uses boundary-aware phrase matching and phrase-level deduplication. It does not perform synonym/NLP concept normalization by design.
+
+---
+
+## 💡 Known Limitations
+
+As an educational and research-oriented medical decision-support prototype, this system has several documented boundaries:
+
+1. **Arabic Dialect & Colloquial Support:**
+   - Arabic conversational support is optimized for Modern Standard Arabic (MSA) clinical templates. 
+   - Regional Arabic colloquial dialects are currently under ongoing iterative improvement and may not achieve the same precision in symptom matching.
+
+2. **Scope of Knowledge Base:**
+   - Retrieval quality is heavily dependent on the curated corpus (`medical_knowledge_medquad.txt` and `medical_knowledge_medmcqa.txt`). 
+   - If a symptom or disease is completely absent from the ingested context, the RAG retriever cannot locate it, and the system relies entirely on generalized clinical fallback instructions.
+
+3. **No Definitive Diagnosis:**
+   - The system is explicitly calibrated for **triage, educational screening, and information routing**, not medical diagnosis. 
+   - It is designed to guide users on when to seek urgent care rather than acting as a definitive clinical authority or an AI doctor.
+
+4. **Resource and Model Limitations:**
+   - Running LLaMA 3 8B locally on CPU may result in increased inference latency. 
+   - The quality of synthesis is bounded by the parameters of the underlying 8B local model.
 
 ---
 
