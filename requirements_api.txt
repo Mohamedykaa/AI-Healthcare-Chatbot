@@ -1,9 +1,40 @@
-fastapi
-uvicorn
-pydantic
-python-dotenv
-langchain-community
-langchain-core
-langchain
-chromadb
-sentence-transformers
+# =============================================================================
+# AI Healthcare Chatbot — FastAPI REST API Dependencies
+# =============================================================================
+# LOCKED dependency set. Shares core packages with requirements_chainlit.txt.
+# =============================================================================
+
+# --- Web Framework ---
+fastapi==0.109.2
+uvicorn==0.25.0
+
+# --- LangChain Core (0.1.x series) ---
+langchain==0.1.20
+langchain-core==0.1.52
+langchain-community==0.0.38
+langchain-text-splitters==0.0.2
+
+# --- LLM Provider: Google Gemini ---
+langchain-google-genai==1.0.3
+google-generativeai==0.5.4
+
+# --- Vector Store ---
+chromadb==0.4.24
+
+# --- Embeddings ---
+sentence-transformers==2.5.1
+huggingface-hub==0.21.4
+tokenizers==0.19.1
+transformers==4.40.2
+
+# --- Pydantic ---
+pydantic==2.9.2
+pydantic-core==2.23.4
+pydantic-settings==2.6.1
+
+# --- Utilities ---
+python-dotenv==1.0.1
+tiktoken==0.6.0
+numpy==1.26.4
+aiohttp==3.9.5
+tenacity==8.5.0

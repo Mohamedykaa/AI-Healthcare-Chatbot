@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from src.core.logic import initialize_components, process_chat_message
+from src.core.config import LLM_PROVIDER, GEMINI_MODEL, LLM_MODEL
 
 # Load environment variables (e.g. CHROMA_PERSIST_DIR override)
 load_dotenv()
@@ -97,7 +98,14 @@ async def chat_endpoint(request: ChatRequest):
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok"}
+    active_model = GEMINI_MODEL if LLM_PROVIDER == "gemini" else LLM_MODEL
+    return {
+        "status": "ok",
+        "primary_provider": LLM_PROVIDER,
+        "fallback_provider": "ollama",
+        "active_model": active_model,
+        "fallback_enabled": True if LLM_PROVIDER == "gemini" else False
+    }
 
 
 if __name__ == "__main__":
